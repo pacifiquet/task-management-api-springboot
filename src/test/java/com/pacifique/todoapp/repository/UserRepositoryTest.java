@@ -22,7 +22,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 class UserRepositoryTest {
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
         "postgres:12.3-alpine"
-    );
+    )
+    .withDatabaseName("testdb");
 
     @BeforeAll
     static void beforeAll() {
