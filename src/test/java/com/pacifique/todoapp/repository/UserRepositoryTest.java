@@ -1,47 +1,65 @@
 package com.pacifique.todoapp.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.pacifique.todoapp.model.User;
 import java.time.LocalDateTime;
-import org.junit.jupiter.api.AfterEach;
+import java.util.List;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 @DataJpaTest
-@ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepositoryTest {
-    private final UserRepository userRepository;
-    private User userOne;
-    private User userTwo;
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
+        "postgres:12.3-alpine"
+    );
+
+    @BeforeAll
+    static void beforeAll() {
+        postgres.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        postgres.stop();
+    }
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
 
     @Autowired
-    public UserRepositoryTest(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
+
+    private User user_one;
+    private User user_two;
 
     @BeforeEach
     void setUp() {
-        this.userOne =
+        user_one =
             User
                 .builder()
-                .id(1L)
-                .fullName("emanuel k")
-                .email("emaul@gmail.com")
+                .fullName("peter p")
+                .email("peter@gmail.com")
                 .role("user")
                 .createdAt(LocalDateTime.now())
                 .build();
-        this.userTwo =
+        user_two =
             User
                 .builder()
-                .id(2L)
                 .fullName("peter p")
                 .email("peter@gmail.com")
                 .role("user")
@@ -51,14 +69,40 @@ class UserRepositoryTest {
 
     @Test
     @DisplayName("Registering a user")
-    void testRegisterUser() {
+    void testRegisterUsers() {
+        //Arrange
+        var user = user_one;
+
         // act
-        User user = userRepository.save(this.userOne);
+        var expected_user = userRepository.save(user);
+
         //assert
-        assertNotNull(user);
-        assertEquals(this.userOne, user);
+        assertEquals(expected_user, user);
     }
 
-    @AfterEach
-    void tearDown() {}
+    @Test
+    @DisplayName("Testing Get user list")
+    void testUserList() {
+        //Arrange
+        var expected_users = List.of(user_one, user_two);
+
+        //act
+        userRepository.saveAll(List.of(user_one, user_two));
+        List<User> userList = userRepository.findAll();
+
+        //assert
+        assertEquals(userList, expected_users);
+    }
+
+    @Test
+    @DisplayName("Testing Get user")
+    void testGetUser() {
+        //Arrange
+        var expected_user = user_one;
+        //act
+        userRepository.save(user_one);
+        var user = userRepository.findById(1L);
+        //assert
+        assertEquals(user.get(), expected_user);
+    }
 }
