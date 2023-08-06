@@ -1,0 +1,26 @@
+name: Spring Boot todo app api CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+
+      - name: Build and test
+        run: make build test
+
+      - name: Deploy
+        run: make deploy
+
