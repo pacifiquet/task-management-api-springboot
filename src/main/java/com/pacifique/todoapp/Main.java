@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "Todo application Restful API"))
+@OpenAPIDefinition(info = @Info(title = "Todo Spring boot Restful API"))
 public class Main {
 
     public static void main(String[] args) {

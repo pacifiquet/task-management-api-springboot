@@ -1,7 +1,7 @@
 package com.pacifique.todoapp.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name = "Home Controller", description = "home endpoints")
+@Hidden
 public class HomeController {
 
     @Operation(summary = "Welcome to app todo")
