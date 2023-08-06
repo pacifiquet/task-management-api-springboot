@@ -55,7 +55,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-        
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -67,8 +67,14 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.1.0</version>
         </dependency>
-
-
+        <!-- H2 Database -->
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.220</version>
+            <scope>test</scope>
+        </dependency>
         <!-- JaCoCo Dependency for code coverage -->
         <dependency>
             <groupId>org.jacoco</groupId>

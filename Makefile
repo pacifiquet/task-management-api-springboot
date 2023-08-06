@@ -15,7 +15,7 @@ start-dev:
 	 @mvn spring-boot:run
 
 test:
-	mvn clean test jacoco:report
+	 @mvn clean test jacoco:report
 
 start-databases:
 	 @docker compose up -d --build
