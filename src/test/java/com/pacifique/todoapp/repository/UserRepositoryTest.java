@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.pacifique.todoapp.model.User;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +36,7 @@ class UserRepositoryTest {
                 .fullName("emanuel k")
                 .email("emaul@gmail.com")
                 .role("user")
-                .createdAt(LocalDate.now())
+                .createdAt(LocalDateTime.now())
                 .build();
         this.userTwo =
             User
@@ -45,7 +45,7 @@ class UserRepositoryTest {
                 .fullName("peter p")
                 .email("peter@gmail.com")
                 .role("user")
-                .createdAt(LocalDate.now())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 

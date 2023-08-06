@@ -3,6 +3,7 @@ package com.pacifique.todoapp.exceptions;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class DefaultHttpExceptionHandler {
 
-    @ExceptionHandler(NoSuchElementException.class)
+    @ExceptionHandler(
+        { NoSuchElementException.class, DataIntegrityViolationException.class }
+    )
     public ResponseEntity<ApiError> defaultHandler(
-        NoSuchElementException e,
+        Exception e,
         HttpServletRequest request
     ) {
         return ResponseEntity

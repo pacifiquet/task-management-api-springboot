@@ -55,6 +55,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+        
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -113,24 +114,6 @@
                     <outputFileName>openapi.json</outputFileName>
                     <outputDir>${project.build.directory}</outputDir>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.rudikershaw.gitbuildhook</groupId>
-                <artifactId>git-build-hook-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <installHooks>
-                        <commit-msg>hooks/commit-msg</commit-msg>
-                        <pre-commit>hooks/pre-commit</pre-commit>
-                    </installHooks>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
