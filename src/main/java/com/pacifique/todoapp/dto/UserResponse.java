@@ -1,6 +1,7 @@
 package com.pacifique.todoapp.dto;
 
-import java.time.LocalDate;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,10 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class UserResponse {
+public class UserResponse implements Serializable {
     private Long id;
     private String email;
     private String fullName;
     private String role;
-    private LocalDate createAt;
+    private LocalDateTime createAt;
 }

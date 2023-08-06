@@ -17,7 +17,7 @@ start-dev:
 test:
 	mvn clean test jacoco:report
 
-start-database:
+start-databases:
 	 @docker compose up -d --build
 
 clean:

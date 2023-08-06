@@ -4,17 +4,24 @@ import com.pacifique.todoapp.dto.UserRequest;
 import com.pacifique.todoapp.dto.UserResponse;
 import com.pacifique.todoapp.model.User;
 import com.pacifique.todoapp.repository.UserRepository;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+@EnableCaching
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
 
+    @CacheEvict(cacheNames = "user-list", allEntries = true)
     public Long registerUser(UserRequest request) {
         return userRepository
             .save(
@@ -23,12 +30,13 @@ public class UserService {
                     .fullName(request.getFullName())
                     .email(request.getEmail())
                     .role(request.getRole())
-                    .createdAt(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
                     .build()
             )
             .getId();
     }
 
+    @Cacheable(cacheNames = "user-list")
     public List<UserResponse> allUsers() {
         return userRepository
             .findAll()
@@ -47,6 +55,7 @@ public class UserService {
             .toList();
     }
 
+    @Cacheable(cacheNames = "user")
     public UserResponse getUser(Long id) {
         return userRepository
             .findById(id)

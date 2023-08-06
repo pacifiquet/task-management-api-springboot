@@ -11,7 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -29,19 +29,19 @@ public class User {
     @Id
     @SequenceGenerator(
         name = "user_id_sequence",
-        sequenceName = "user_sequence",
+        sequenceName = "user_id_sequence",
         allocationSize = 1
     )
     @GeneratedValue(
         strategy = GenerationType.SEQUENCE,
-        generator = "user_sequence"
+        generator = "user_id_sequence"
     )
     private Long id;
 
     private String email;
     private String fullName;
     private String role;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
