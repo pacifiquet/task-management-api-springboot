@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/diffplug/spotless
+    rev: 5.15.1
+    hooks:
+      - id: mvn-spotless
+        name: Spotless Format
+
+  # Add other Spring-specific checks or linters as needed
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-builtin-literals
+        args: [ --no-allow-dict-kwargs ]
