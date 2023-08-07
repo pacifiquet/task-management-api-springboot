@@ -7,6 +7,10 @@
     - redis
     - springdoc-openapi
     - maven
+    - TestContainers
+    - WebTestClient for integration testing
+    - Docker
+    - pre-commit and spotless format
 
 # DATABASE DESIGN
 

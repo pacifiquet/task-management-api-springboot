@@ -1,5 +1,6 @@
 package com.pacifique.todoapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -16,5 +17,7 @@ public class UserResponse implements Serializable {
     private String email;
     private String fullName;
     private String role;
+
+    @JsonProperty("create_at")
     private LocalDateTime createAt;
 }
