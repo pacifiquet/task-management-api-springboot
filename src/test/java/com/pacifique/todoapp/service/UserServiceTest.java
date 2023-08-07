@@ -5,11 +5,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import com.pacifique.todoapp.datetime.extension.MockTimeExtension;
+import com.pacifique.todoapp.datetime.utils.Time;
 import com.pacifique.todoapp.dto.UserRequest;
 import com.pacifique.todoapp.dto.UserResponse;
 import com.pacifique.todoapp.model.User;
 import com.pacifique.todoapp.repository.UserRepository;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -20,10 +21,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.test.context.ActiveProfiles;
 
-@ExtendWith(MockitoExtension.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
+@ExtendWith({ MockTimeExtension.class, MockitoExtension.class })
 class UserServiceTest {
     @InjectMocks
     private UserService userService;
@@ -43,7 +44,7 @@ class UserServiceTest {
                 .fullName("peter p")
                 .email("peter@gmail.com")
                 .role("user")
-                .createdAt(LocalDateTime.now())
+                .createdAt(Time.currentDateTime())
                 .build();
         user_two =
             User
@@ -52,7 +53,7 @@ class UserServiceTest {
                 .fullName("peter p")
                 .email("peter@gmail.com")
                 .role("user")
-                .createdAt(LocalDateTime.now())
+                .createdAt(Time.currentDateTime())
                 .build();
     }
 

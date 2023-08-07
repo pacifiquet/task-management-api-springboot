@@ -9,21 +9,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pacifique.todoapp.datetime.extension.MockTimeExtension;
+import com.pacifique.todoapp.datetime.utils.Time;
 import com.pacifique.todoapp.dto.UserRequest;
 import com.pacifique.todoapp.dto.UserResponse;
 import com.pacifique.todoapp.service.UserService;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest
+@ActiveProfiles("test")
+@ExtendWith(MockTimeExtension.class)
 class UserControllerTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
@@ -56,7 +61,7 @@ class UserControllerTest {
                 .fullName("username")
                 .email("user@gmail.com")
                 .role("user")
-                .createAt(LocalDateTime.now())
+                .createAt(Time.currentDateTime())
                 .build();
     }
 
