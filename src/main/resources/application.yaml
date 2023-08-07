@@ -35,9 +35,27 @@ spring:
   config:
     activate:
       on-profile: dev
-
 springdoc:
   api-docs:
     path: /api-docs
   swagger-ui:
     operations-sorter: method
+
+---
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  config:
+    activate:
+      on-profile: test

@@ -2,43 +2,32 @@ package com.pacifique.todoapp.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.pacifique.todoapp.datetime.extension.MockTimeExtension;
+import com.pacifique.todoapp.datetime.extension.TodoAppPostgresqlContainer;
+import com.pacifique.todoapp.datetime.utils.Time;
 import com.pacifique.todoapp.model.User;
-import java.time.LocalDateTime;
 import java.util.List;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
+@ExtendWith(MockTimeExtension.class)
 class UserRepositoryTest {
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-        "postgres:12.3-alpine"
-    );
+    public static PostgreSQLContainer<?> postgres = TodoAppPostgresqlContainer.getInstance();
 
     @BeforeAll
     static void beforeAll() {
         postgres.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgres.stop();
-    }
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
     }
 
     @Autowired
@@ -55,7 +44,7 @@ class UserRepositoryTest {
                 .fullName("peter p")
                 .email("peter@gmail.com")
                 .role("user")
-                .createdAt(LocalDateTime.now())
+                .createdAt(Time.currentDateTime())
                 .build();
         userTwo =
             User
@@ -63,7 +52,7 @@ class UserRepositoryTest {
                 .fullName("peter p")
                 .email("peter@gmail.com")
                 .role("user")
-                .createdAt(LocalDateTime.now())
+                .createdAt(Time.currentDateTime())
                 .build();
     }
 
@@ -101,8 +90,8 @@ class UserRepositoryTest {
         var expected_user = userOne;
         //act
         userRepository.save(userOne);
-        var user = userRepository.findById(1L);
+        var user = userRepository.findById(1L).get();
         //assert
-        assertEquals(user.get(), expected_user);
+        assertEquals(user, expected_user);
     }
 }
