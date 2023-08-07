@@ -22,8 +22,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 class UserRepositoryTest {
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
         "postgres:12.3-alpine"
-    )
-    .withDatabaseName("testdb");
+    );
 
     @BeforeAll
     static void beforeAll() {
@@ -45,12 +44,12 @@ class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private User user_one;
-    private User user_two;
+    private User userOne;
+    private User userTwo;
 
     @BeforeEach
     void setUp() {
-        user_one =
+        userOne =
             User
                 .builder()
                 .fullName("peter p")
@@ -58,7 +57,7 @@ class UserRepositoryTest {
                 .role("user")
                 .createdAt(LocalDateTime.now())
                 .build();
-        user_two =
+        userTwo =
             User
                 .builder()
                 .fullName("peter p")
@@ -72,7 +71,7 @@ class UserRepositoryTest {
     @DisplayName("Registering a user")
     void testRegisterUsers() {
         //Arrange
-        var user = user_one;
+        var user = userOne;
 
         // act
         var expected_user = userRepository.save(user);
@@ -85,10 +84,10 @@ class UserRepositoryTest {
     @DisplayName("Testing Get user list")
     void testUserList() {
         //Arrange
-        var expected_users = List.of(user_one, user_two);
+        var expected_users = List.of(userOne, userTwo);
 
         //act
-        userRepository.saveAll(List.of(user_one, user_two));
+        userRepository.saveAll(List.of(userOne, userTwo));
         List<User> userList = userRepository.findAll();
 
         //assert
@@ -99,9 +98,9 @@ class UserRepositoryTest {
     @DisplayName("Testing Get user")
     void testGetUser() {
         //Arrange
-        var expected_user = user_one;
+        var expected_user = userOne;
         //act
-        userRepository.save(user_one);
+        userRepository.save(userOne);
         var user = userRepository.findById(1L);
         //assert
         assertEquals(user.get(), expected_user);

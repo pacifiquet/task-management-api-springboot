@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @AllArgsConstructor
-@RequestMapping("api/v1/todos")
+@RequestMapping("api/v1/users")
 @Tag(name = "User controller", description = "All users endpoints")
 public class UserController {
     private final UserService userService;
@@ -52,7 +52,7 @@ public class UserController {
         }
     )
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/register/user")
+    @PostMapping("/register")
     public Long registerUser(@RequestBody @Validated UserRequest request) {
         return userService.registerUser(request);
     }
@@ -77,7 +77,7 @@ public class UserController {
             ),
         }
     )
-    @GetMapping("/users")
+    @GetMapping
     public List<UserResponse> getAllUsers() {
         return userService.allUsers();
     }
@@ -97,7 +97,7 @@ public class UserController {
             ),
         }
     )
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public UserResponse getUser(
         @Parameter(description = "user id to look up") @PathVariable Long id
     ) {
