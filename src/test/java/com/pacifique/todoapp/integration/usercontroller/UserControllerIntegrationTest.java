@@ -17,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -25,14 +26,14 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-    properties = { "server.port=8084" }
-)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @ExtendWith(MockTimeExtension.class)
 public class UserControllerIntegrationTest {
     public static PostgreSQLContainer<?> postgres = TodoAppPostgresqlContainer.getInstance();
+
+    @LocalServerPort
+    private int port;
 
     @BeforeAll
     static void beforeAll() {
@@ -46,15 +47,12 @@ public class UserControllerIntegrationTest {
     @BeforeAll
     static void setUp() {
         client =
-            WebTestClient
-                .bindToServer()
-                .baseUrl("http://localhost:" + "8084")
-                .build();
+            WebTestClient.bindToServer().baseUrl("http://localhost:").build();
     }
 
     @BeforeEach
     public void beforeSetup() {
-        this.baseUrl = this.baseUrl + "8084" + "/api/v1/users";
+        this.baseUrl = this.baseUrl + port + "/api/v1/users";
     }
 
     @Test

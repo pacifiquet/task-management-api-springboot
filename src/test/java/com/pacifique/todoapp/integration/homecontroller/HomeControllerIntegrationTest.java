@@ -8,40 +8,39 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-    properties = { "server.port=8084" }
-)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class HomeControllerIntegrationTest {
     public static PostgreSQLContainer<?> postgres = TodoAppPostgresqlContainer.getInstance();
+
+    @LocalServerPort
+    private int port;
+
+    private String baseUrl = "http://localhost:";
 
     @BeforeAll
     static void beforeAll() {
         postgres.start();
     }
 
-    private String baseUrl = "http://localhost:";
     private static WebTestClient client;
 
     @BeforeAll
     static void setUp() {
         client =
-            WebTestClient
-                .bindToServer()
-                .baseUrl("http://localhost:" + "8084")
-                .build();
+            WebTestClient.bindToServer().baseUrl("http://localhost:").build();
     }
 
     @BeforeEach
     public void beforeSetup() {
-        this.baseUrl = this.baseUrl + "8084" + "/";
+        this.baseUrl = this.baseUrl + port + "/";
     }
 
     @Test
