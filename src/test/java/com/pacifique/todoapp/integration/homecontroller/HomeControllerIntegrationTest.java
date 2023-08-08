@@ -16,7 +16,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-    properties = { "server.port=8042" }
+    properties = { "server.port=8084" }
 )
 @ActiveProfiles("test")
 public class HomeControllerIntegrationTest {
@@ -35,13 +35,13 @@ public class HomeControllerIntegrationTest {
         client =
             WebTestClient
                 .bindToServer()
-                .baseUrl("http://localhost:" + "8042")
+                .baseUrl("http://localhost:" + "8084")
                 .build();
     }
 
     @BeforeEach
     public void beforeSetup() {
-        this.baseUrl = this.baseUrl + "8042" + "/";
+        this.baseUrl = this.baseUrl + "8084" + "/";
     }
 
     @Test
