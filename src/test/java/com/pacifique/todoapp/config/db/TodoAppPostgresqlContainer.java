@@ -1,4 +1,4 @@
-package com.pacifique.todoapp.datetime.extension;
+package com.pacifique.todoapp.config.db;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 

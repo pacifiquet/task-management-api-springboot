@@ -1,9 +1,9 @@
-package com.pacifique.todoapp.datetime;
+package com.pacifique.todoapp.config.archtest;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
-import com.pacifique.todoapp.datetime.utils.OldTimeAdaptor;
+import com.pacifique.todoapp.config.utils.OldTimeAdaptor;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -18,7 +18,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 @AnalyzeClasses(
-    packages = "com.pacifique.todoapp.datetime",
+    packages = "com.pacifique.todoapp",
     importOptions = ImportOption.DoNotIncludeTests.class
 )
 public class ArchitectureRulesDateTimeTest {

@@ -5,8 +5,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import com.pacifique.todoapp.datetime.extension.MockTimeExtension;
-import com.pacifique.todoapp.datetime.utils.Time;
+import com.pacifique.todoapp.config.extension.MockTimeExtension;
+import com.pacifique.todoapp.config.utils.Time;
 import com.pacifique.todoapp.dto.UserRequest;
 import com.pacifique.todoapp.dto.UserResponse;
 import com.pacifique.todoapp.model.User;

@@ -11,10 +11,11 @@ build:
 	 @mvn clean install
 
 start-dev:
-	 @mvn spotless:check
+	 @mvn clean test
 	 @mvn spring-boot:run
 
 test:
+	 @mvn spotless:check
 	 @mvn clean test jacoco:report
 
 start-databases:

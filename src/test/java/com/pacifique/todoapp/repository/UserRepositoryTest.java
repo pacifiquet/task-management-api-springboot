@@ -2,9 +2,9 @@ package com.pacifique.todoapp.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.pacifique.todoapp.datetime.extension.MockTimeExtension;
-import com.pacifique.todoapp.datetime.extension.TodoAppPostgresqlContainer;
-import com.pacifique.todoapp.datetime.utils.Time;
+import com.pacifique.todoapp.config.db.TodoAppPostgresqlContainer;
+import com.pacifique.todoapp.config.extension.MockTimeExtension;
+import com.pacifique.todoapp.config.utils.Time;
 import com.pacifique.todoapp.model.User;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
