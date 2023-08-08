@@ -1,7 +1,7 @@
 package com.pacifique.todoapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,15 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserRequest {
-    @NotNull(message = "user full name is required")
-    @NotBlank
+    @NotBlank(message = "user name is required")
+    @JsonProperty("full_name")
     private String fullName;
 
-    @NotNull(message = "user email is required")
-    @NotBlank
+    @NotBlank(message = "user email is required")
     private String email;
 
-    @NotNull(message = "user role is required")
-    @NotBlank
+    @NotBlank(message = "user role is required")
     private String role;
 }

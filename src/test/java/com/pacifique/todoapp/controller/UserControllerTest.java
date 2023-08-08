@@ -9,8 +9,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pacifique.todoapp.datetime.extension.MockTimeExtension;
-import com.pacifique.todoapp.datetime.utils.Time;
+import com.pacifique.todoapp.config.extension.MockTimeExtension;
+import com.pacifique.todoapp.config.utils.Time;
 import com.pacifique.todoapp.dto.UserRequest;
 import com.pacifique.todoapp.dto.UserResponse;
 import com.pacifique.todoapp.service.UserService;

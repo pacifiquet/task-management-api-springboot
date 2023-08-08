@@ -15,7 +15,10 @@ import lombok.NoArgsConstructor;
 public class UserResponse implements Serializable {
     private Long id;
     private String email;
+
+    @JsonProperty("full_name")
     private String fullName;
+
     private String role;
 
     @JsonProperty("create_at")

@@ -1,10 +1,10 @@
 package com.pacifique.todoapp.service;
 
+import com.pacifique.todoapp.config.utils.Time;
 import com.pacifique.todoapp.dto.UserRequest;
 import com.pacifique.todoapp.dto.UserResponse;
 import com.pacifique.todoapp.model.User;
 import com.pacifique.todoapp.repository.UserRepository;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class UserService {
                     .fullName(request.getFullName())
                     .email(request.getEmail())
                     .role(request.getRole())
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(Time.currentDateTime())
                     .build()
             )
             .getId();
