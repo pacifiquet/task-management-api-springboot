@@ -1,8 +1,10 @@
-# SPRING BOOT API TODO APPLICATION
+# FULL-STACK SPRING BOOT REACTJS TODO APPLICATION
 
 ## List of tech used in the project
 
     - spring-boot
+    - reactjs
+    - typescript
     - postgres
     - redis
     - springdoc-openapi
