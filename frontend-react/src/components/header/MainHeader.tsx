@@ -1,17 +1,25 @@
 import classes from "./MainHeader.module.css";
+import {Link} from "react-router-dom";
+import {MouseEventHandler} from "react";
 
-function MainHeader() {
+type Props = {
+    onOpenLogin: MouseEventHandler<HTMLElement> | undefined;
+}
+
+function MainHeader({onOpenLogin}: Props) {
     return (
         <>
-            {/*main header*/}
             <div className={classes.navbar}>
                 <div className={classes.logo}>
-                    <a href="#">TODO</a>
+                    <Link to="/">
+                        <p>TODO</p>
+                    </Link>
+
                 </div>
                 <div className={classes.navlink}>
                     <ul>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Signup</a></li>
+                        <li><Link to="/" onClick={onOpenLogin}><p>Login</p></Link></li>
+                        <li><Link to="/"><p>Signup</p></Link></li>
                     </ul>
                 </div>
             </div>
