@@ -1,13 +1,18 @@
 import classes from './Model.module.css'
+import {ReactNode} from "react";
 
-function Model(props) {
-    const {children} = props;
+type Props = {
+    children: ReactNode
+}
+
+function Model({children}: Props) {
     return (<>
         <div className={classes.backdrop}>
-            <dialog className={classes.modal}>
+            <div className={classes.wrapper}>
                 {children}
-            </dialog>
+            </div>
         </div>
+
     </>)
 
 }

@@ -1,0 +1,138 @@
+.loginForm {
+    border-radius: 10px;
+    background: rgba(69, 69, 69, 1);
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+}
+
+.formCLose img {
+    width: 30px;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    cursor: pointer;
+
+}
+
+form .formHeader img {
+
+}
+
+form h1 {
+    color: #FAF5E9;
+    font-family: "Raleway", sans-serif;
+    font-size: 35px;
+    font-weight: 800;
+    display: flex;
+    justify-content: center;
+}
+
+form .closeIcon {
+    position: relative;
+}
+
+form .closeIcon img {
+    width: 30px;
+    position: relative;
+    top: 10px;
+
+}
+
+form p {
+    display: flex;
+    justify-content: center;
+}
+
+form p img {
+    margin: 0 10px;
+    width: 30px;
+}
+
+
+form p strong {
+    color: #FC0;
+    font-family: "Raleway", sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.inputFields {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-left: 10%;
+
+}
+
+.inputFields input {
+    border-radius: 5px;
+    background: #FFF;
+    height: 40px;
+    outline: none;
+    border: none;
+    margin-bottom: 40px;
+    text-align: center;
+    font-weight: 400;
+    font-family: "Raleway", sans-serif;
+    font-size: 18px;
+}
+
+
+.inputFields label {
+    color: #FAF5E9;
+    font-family: "Raleway", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.loginForm button {
+    width: 30%;
+    margin-left: 35%;
+    height: 48px;
+    border-radius: 10px;
+    background: #009B4D;
+    outline: none;
+    border: none;
+    color: #FAF5E9;
+    font-family: "Raleway", sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.actions {
+    display: flex;
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.actions p {
+    color: #E5E5E5;
+    font-family: "Raleway", sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    margin: 20px;
+}
+
+.actions a {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 42%;
+    margin-left: 20px;
+    text-decoration: none;
+    color: #FFBA40;
+    font-family: "Raleway", sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+}
