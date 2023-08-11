@@ -3,10 +3,12 @@ package com.pacifique.todoapp.integration.homecontroller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.pacifique.todoapp.config.db.TodoAppPostgresqlContainer;
+import com.pacifique.todoapp.config.extension.CustomTestExecutionExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@ExtendWith(CustomTestExecutionExtension.class)
 public class HomeControllerIntegrationTest {
     public static PostgreSQLContainer<?> postgres = TodoAppPostgresqlContainer.getInstance();
 
@@ -34,8 +37,7 @@ public class HomeControllerIntegrationTest {
 
     @BeforeAll
     static void setUp() {
-        client =
-            WebTestClient.bindToServer().baseUrl("http://localhost:").build();
+        client = WebTestClient.bindToServer().baseUrl("http://localhost:").build();
     }
 
     @BeforeEach
@@ -56,11 +58,11 @@ public class HomeControllerIntegrationTest {
             .exchange()
             .expectBody(String.class)
             .returnResult();
-        String response_data = response.getResponseBody();
-        HttpStatusCode status = response.getStatus();
+        String actual_response = response.getResponseBody();
+        HttpStatusCode response_status = response.getStatus();
 
         // assert
-        assertEquals(status, HttpStatus.OK);
-        assertEquals(response_data, expected_response);
+        assertEquals(HttpStatus.OK, response_status);
+        assertEquals(expected_response, actual_response);
     }
 }

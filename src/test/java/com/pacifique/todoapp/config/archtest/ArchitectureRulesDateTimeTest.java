@@ -3,7 +3,7 @@ package com.pacifique.todoapp.config.archtest;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
-import com.pacifique.todoapp.config.utils.OldTimeAdaptor;
+import com.pacifique.todoapp.config.utils.OldTimeApiAdaptor;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -25,12 +25,7 @@ public class ArchitectureRulesDateTimeTest {
     @ArchTest
     public static final ArchRule RESTRICT_TIME_MOCKING = noClasses()
         .should()
-        .callMethod(
-            Time.class,
-            "useMockTime",
-            LocalDateTime.class,
-            ZoneId.class
-        )
+        .callMethod(Time.class, "useMockTime", LocalDateTime.class, ZoneId.class)
         .because(
             "Method Time.useMockTime designed only for test purpose and can be used only in the tests"
         );
@@ -78,7 +73,7 @@ public class ArchitectureRulesDateTimeTest {
     @ArchTest
     public static final ArchRule RESTRICT_USAGE_OF_OLD_DATE_API = classes()
         .that()
-        .areNotAssignableTo(OldTimeAdaptor.class)
+        .areNotAssignableTo(OldTimeApiAdaptor.class)
         .should()
         .onlyAccessClassesThat()
         .areNotAssignableTo(Date.class)

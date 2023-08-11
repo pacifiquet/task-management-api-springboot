@@ -1,11 +1,18 @@
 #Makefile
 
+SONAR := org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+PROJECT_KEY := task-management-backend
+PROJECT_NAME := 'task-management-backend'
 # A default target that runs when you type "make" without specifying a target
 default: build test
 
 
 format:
 	 @mvn spotless:apply
+
+
+analyze:
+	 @mvn -B verify $(SONAR) -Dsonar.projectKey=$(PROJECT_KEY) -Dsonar.projectName=$(PROJECT_NAME)
 
 build:
 	 @mvn clean install

@@ -8,8 +8,7 @@ import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public class MockTimeExtension
-    implements BeforeEachCallback, AfterEachCallback {
+public class MockTimeExtension implements BeforeEachCallback, AfterEachCallback {
 
     @Override
     public void afterEach(ExtensionContext extensionContext) throws Exception {
@@ -18,13 +17,7 @@ public class MockTimeExtension
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
-        LocalDateTime currentDateTime = LocalDateTime.of(
-            2023,
-            Month.AUGUST,
-            8,
-            3,
-            56
-        );
+        LocalDateTime currentDateTime = LocalDateTime.of(2023, Month.AUGUST, 8, 3, 56);
         ZoneId zoneId = ZoneId.of("Asia/Manila");
         Time.useMockTime(currentDateTime, zoneId);
     }

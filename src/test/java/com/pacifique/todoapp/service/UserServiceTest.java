@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import com.pacifique.todoapp.config.extension.CustomTestExecutionExtension;
 import com.pacifique.todoapp.config.extension.MockTimeExtension;
 import com.pacifique.todoapp.config.utils.Time;
 import com.pacifique.todoapp.dto.UserRequest;
@@ -24,7 +25,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
-@ExtendWith({ MockTimeExtension.class, MockitoExtension.class })
+@ExtendWith(
+    {
+        MockTimeExtension.class,
+        MockitoExtension.class,
+        CustomTestExecutionExtension.class,
+    }
+)
 class UserServiceTest {
     @InjectMocks
     private UserService userService;
@@ -58,18 +65,19 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Testing Register a user")
+    @DisplayName("Testing Registering a user")
     void testRegisterUser() {
         // arrange
+        var expected_response = 1L;
         when(userRepository.save(any(User.class))).thenReturn(user_one);
 
         //act
-        Long registered = userService.registerUser(
+        Long actual_response = userService.registerUser(
             new UserRequest("peter", "peter@gmail.com", "user")
         );
 
         //Assert
-        assertEquals(registered, 1L);
+        assertEquals(expected_response, actual_response);
     }
 
     @Test
@@ -93,14 +101,14 @@ class UserServiceTest {
             .toList();
 
         //act
-        List<UserResponse> allUsers = userService.allUsers();
+        List<UserResponse> actual_users = userService.allUsers();
 
         //Assert
-        assertEquals(allUsers, expected_users);
+        assertEquals(expected_users, actual_users);
     }
 
     @Test
-    @DisplayName("Testing retrieve use by Id")
+    @DisplayName("Testing retrieve user by Id")
     void testRetrieveUserById() {
         //arrange
         when(userRepository.findById(anyLong()))
@@ -115,9 +123,9 @@ class UserServiceTest {
             .build();
 
         //Act
-        var user = userService.getUser(1L);
+        var actual_user = userService.getUser(1L);
 
         //assert
-        assertEquals(user, expected_user);
+        assertEquals(expected_user, actual_user);
     }
 }

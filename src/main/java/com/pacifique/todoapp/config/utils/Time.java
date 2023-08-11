@@ -11,7 +11,12 @@ import java.time.ZonedDateTime;
 import java.util.TimeZone;
 
 public class Time {
-    private static Clock CLOCk = Clock.systemDefaultZone();
+
+    private Time() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    private static Clock clock = Clock.systemDefaultZone();
     private static final TimeZone REAL_TIME_ZONE = TimeZone.getDefault();
 
     public static LocalDate currentDate() {
@@ -44,16 +49,16 @@ public class Time {
 
     public static void useMockTime(LocalDateTime dateTime, ZoneId zoneId) {
         Instant instant = dateTime.atZone(zoneId).toInstant();
-        CLOCk = Clock.fixed(instant, zoneId);
+        clock = Clock.fixed(instant, zoneId);
         TimeZone.setDefault(TimeZone.getTimeZone(zoneId));
     }
 
     public static void useSystemDefaultZoneClock() {
         TimeZone.setDefault(REAL_TIME_ZONE);
-        CLOCk = Clock.systemDefaultZone();
+        clock = Clock.systemDefaultZone();
     }
 
     private static Clock getClock() {
-        return CLOCk;
+        return clock;
     }
 }
