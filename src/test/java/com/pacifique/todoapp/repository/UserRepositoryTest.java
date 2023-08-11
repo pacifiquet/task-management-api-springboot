@@ -3,7 +3,6 @@ package com.pacifique.todoapp.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.pacifique.todoapp.config.db.TodoAppPostgresqlContainer;
-import com.pacifique.todoapp.config.extension.CustomTestExecutionExtension;
 import com.pacifique.todoapp.config.extension.MockTimeExtension;
 import com.pacifique.todoapp.config.utils.Time;
 import com.pacifique.todoapp.model.User;
@@ -22,7 +21,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-@ExtendWith({ MockTimeExtension.class, CustomTestExecutionExtension.class })
+@ExtendWith(MockTimeExtension.class)
 class UserRepositoryTest {
     public static PostgreSQLContainer<?> postgres = TodoAppPostgresqlContainer.getInstance();
 

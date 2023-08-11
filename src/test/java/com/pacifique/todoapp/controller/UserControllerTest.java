@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pacifique.todoapp.config.extension.CustomTestExecutionExtension;
 import com.pacifique.todoapp.config.extension.MockTimeExtension;
 import com.pacifique.todoapp.config.utils.Time;
 import com.pacifique.todoapp.dto.UserRequest;
@@ -29,7 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest
 @ActiveProfiles("test")
-@ExtendWith({ MockTimeExtension.class, CustomTestExecutionExtension.class })
+@ExtendWith(MockTimeExtension.class)
 class UserControllerTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;

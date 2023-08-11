@@ -10,11 +10,11 @@ public class CustomTestExecutionExtension implements AfterTestExecutionCallback 
         String testName = context.getDisplayName();
         String result = context.getExecutionException().isPresent() ? "FAIL" : "PASS";
         String textColor = context.getExecutionException().isPresent()
-            ? "\u001B[33;2m"
+            ? "\u001B[31m"
             : "\u001B[32m";
 
         System.out.println(
-            "Test: " + testName + " - Result: " + textColor + result + "\u001B[0m"
-        ); // Reset color after printing
+            "Test: " + testName + " - Result: " + textColor + " " + result + "\u001B[0m"
+        );
     }
 }
