@@ -50,6 +50,9 @@ networks:
   postgres:
     driver: bridge
 volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
   postgres:
   pgadmin:
   cache:

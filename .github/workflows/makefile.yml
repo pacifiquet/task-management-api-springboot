@@ -24,7 +24,7 @@ jobs:
           cache: maven
 
       - name: Build and test
-        run: make test clean
+        run: make
 
       - name: Deploy
         run: make deploy

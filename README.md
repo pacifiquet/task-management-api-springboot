@@ -1,4 +1,4 @@
-# FULL-STACK SPRING BOOT REACTJS TODO APPLICATION
+# Full-Stack Spring Boot Reactjs for Task Management and Collaboration Application
 
 ## List of tech used in the project
 
