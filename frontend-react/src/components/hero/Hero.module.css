@@ -1,0 +1,54 @@
+.heroSection {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 1272px;
+    height: 498px;
+    border-radius: 10px;
+    background: #E5E5E5;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+    margin-top: 150px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    position: relative;
+    z-index: -1000;
+
+}
+
+.heroSection h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10%;
+    color: #000;
+    text-align: center;
+    font-family: "Raleway", sans-serif;
+    font-size: 50px;
+    font-weight: 600;
+}
+
+.heroSection h1 strong {
+    padding: 0 4px;
+    margin: 0 10px;
+    color: #000;
+    font-family: "Raleway", sans-serif;
+    font-size: 50px;
+    font-weight: 900;
+}
+
+.heroButton {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 20px 0;
+    width: 250px;
+    border-radius: 10px;
+    background: #009B4D;
+    outline: none;
+    border: none;
+    color: #FAF5E9;
+    font-family: "Raleway", sans-serif;
+    font-size: 40px;
+    font-weight: 600;
+    cursor: pointer;
+}

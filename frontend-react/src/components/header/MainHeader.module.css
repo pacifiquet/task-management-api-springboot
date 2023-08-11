@@ -1,0 +1,46 @@
+.navbar {
+    background: #454545;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 870px;
+    margin-top: -10px;
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.logo a {
+    text-decoration: none;
+}
+
+.logo p {
+    font-family: Raleway, sans-serif;
+    color: #FC0;
+    font-size: 35px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+
+.navlink ul {
+    left: 0;
+    display: flex;
+    gap: 174px;
+    margin-top: 25px;
+}
+
+.navlink ul li {
+    list-style: none;
+}
+
+.navlink ul li a {
+    text-decoration: none;
+}
+
+.navlink ul li p {
+    color: #FAF5E9;
+    font-family: sans-serif, Raleway;
+    font-size: 30px;
+    font-weight: 500;
+    text-decoration: none;
+}
