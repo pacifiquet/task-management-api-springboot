@@ -18,6 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public Long registerUser(UserRequest request) {
+        log.info("user is registered successfully");
         return userRepository
             .save(
                 User
