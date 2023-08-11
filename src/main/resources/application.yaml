@@ -3,6 +3,9 @@ server:
 spring:
   profiles:
     active: dev
+  output:
+    ansi:
+      enabled: always
 
 ---
 spring:
