@@ -32,10 +32,7 @@ public class User {
         sequenceName = "user_id_sequence",
         allocationSize = 1
     )
-    @GeneratedValue(
-        strategy = GenerationType.SEQUENCE,
-        generator = "user_id_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_sequence")
     private Long id;
 
     private String email;

@@ -60,27 +60,27 @@ class UserRepositoryTest {
     @DisplayName("Registering a user")
     void testRegisterUsers() {
         //Arrange
-        var user = userOne;
+        var expected_user = userOne;
 
         // act
-        var expected_user = userRepository.save(user);
+        var actual_user = userRepository.save(expected_user);
 
         //assert
-        assertEquals(expected_user, user);
+        assertEquals(expected_user, actual_user);
     }
 
     @Test
     @DisplayName("Testing Get user list")
     void testUserList() {
         //Arrange
-        var expected_users = List.of(userOne, userTwo);
+        var expected_user_list = List.of(userOne, userTwo);
 
         //act
         userRepository.saveAll(List.of(userOne, userTwo));
-        List<User> userList = userRepository.findAll();
+        List<User> actual_user_list = userRepository.findAll();
 
         //assert
-        assertEquals(userList, expected_users);
+        assertEquals(expected_user_list, actual_user_list);
     }
 
     @Test
@@ -90,8 +90,8 @@ class UserRepositoryTest {
         var expected_user = userOne;
         //act
         userRepository.save(userOne);
-        var user = userRepository.findById(1L).get();
+        var actual_user = userRepository.findById(1L).get();
         //assert
-        assertEquals(user, expected_user);
+        assertEquals(expected_user, actual_user);
     }
 }

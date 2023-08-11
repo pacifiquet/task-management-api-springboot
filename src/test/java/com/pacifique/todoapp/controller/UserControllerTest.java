@@ -78,31 +78,29 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRequest))
         );
-        var response = actions.andReturn().getResponse().getContentAsString();
+        var actual_response = actions.andReturn().getResponse().getContentAsString();
 
         // assert
         actions.andExpect(status().isCreated());
-        assertEquals(response, expected_response);
+        assertEquals(expected_response, actual_response);
     }
 
     @Test
     @DisplayName("Test get user list")
     void testUserList() throws Exception {
         // arrange
-        var expected_response = objectMapper.writeValueAsString(
-            List.of(userResponse)
-        );
+        var expected_response = objectMapper.writeValueAsString(List.of(userResponse));
         when(userService.allUsers()).thenReturn(List.of(userResponse));
 
         // act
         var actions = mockMvc.perform(
             get("/api/v1/users").contentType(MediaType.APPLICATION_JSON)
         );
-        var response = actions.andReturn().getResponse().getContentAsString();
+        var actual_response = actions.andReturn().getResponse().getContentAsString();
 
         // assert
         actions.andExpect(status().isOk());
-        assertEquals(response, expected_response);
+        assertEquals(expected_response, actual_response);
     }
 
     @Test
@@ -114,13 +112,12 @@ class UserControllerTest {
 
         // act
         var actions = mockMvc.perform(
-            get("/api/v1/users/{id}", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
+            get("/api/v1/users/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
         );
-        var response = actions.andReturn().getResponse().getContentAsString();
+        var actual_response = actions.andReturn().getResponse().getContentAsString();
 
         // assert
         actions.andExpect(status().isOk());
-        assertEquals(response, expected_response);
+        assertEquals(expected_response, actual_response);
     }
 }

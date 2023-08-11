@@ -46,8 +46,7 @@ public class UserControllerIntegrationTest {
 
     @BeforeAll
     static void setUp() {
-        client =
-            WebTestClient.bindToServer().baseUrl("http://localhost:").build();
+        client = WebTestClient.bindToServer().baseUrl("http://localhost:").build();
     }
 
     @BeforeEach
@@ -59,7 +58,7 @@ public class UserControllerIntegrationTest {
     @DisplayName("Testing Registering user")
     void testRegisterUser() throws Exception {
         // arrange
-        var expected_response_data = "1";
+        var expected_response = "1";
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("email", "user@gmail.com");
         requestBody.put("full_name", "username");
@@ -75,12 +74,12 @@ public class UserControllerIntegrationTest {
             .exchange()
             .expectBody(String.class)
             .returnResult();
-        var response_data = response.getResponseBody();
+        var actual_response = response.getResponseBody();
         var response_status = response.getStatus();
 
         //assert
-        assertEquals(response_status, HttpStatus.CREATED);
-        assertEquals(response_data, expected_response_data);
+        assertEquals(HttpStatus.CREATED, response_status);
+        assertEquals(expected_response, actual_response);
     }
 
     @Test
@@ -108,12 +107,12 @@ public class UserControllerIntegrationTest {
             .exchange()
             .expectBody(ApiError.class)
             .returnResult();
-        var response_data = response.getResponseBody();
+        var actual_response = response.getResponseBody();
         var response_status = response.getStatus();
 
         //assert
-        assertEquals(response_status, HttpStatus.BAD_REQUEST);
-        assertEquals(response_data, expected_response);
+        assertEquals(HttpStatus.BAD_REQUEST, response_status);
+        assertEquals(expected_response, actual_response);
     }
 
     @Test
@@ -137,11 +136,11 @@ public class UserControllerIntegrationTest {
             .exchange()
             .expectBodyList(UserResponse.class)
             .returnResult();
-        var response_data = response.getResponseBody();
-        var status = response.getStatus();
+        var actual_response = response.getResponseBody();
+        var response_status = response.getStatus();
         // assert
-        assertEquals(status, HttpStatus.OK);
-        assertEquals(response_data, expected_response);
+        assertEquals(HttpStatus.OK, response_status);
+        assertEquals(expected_response, actual_response);
     }
 
     @Test
@@ -170,12 +169,12 @@ public class UserControllerIntegrationTest {
             .exchange()
             .expectBody(UserResponse.class)
             .returnResult();
-        var response_data = response.getResponseBody();
-        var status = response.getStatus();
+        var actual_response = response.getResponseBody();
+        var response_status = response.getStatus();
 
         // assert
-        assertEquals(status, HttpStatus.OK);
-        assertEquals(response_data, expected_response);
+        assertEquals(HttpStatus.OK, response_status);
+        assertEquals(expected_response, actual_response);
     }
 
     @Test
@@ -204,11 +203,11 @@ public class UserControllerIntegrationTest {
             .exchange()
             .expectBody(ApiError.class)
             .returnResult();
-        var response_data = response.getResponseBody();
-        var status = response.getStatus();
+        var actual_response = response.getResponseBody();
+        var response_status = response.getStatus();
 
         // assert
-        assertEquals(status, HttpStatus.INTERNAL_SERVER_ERROR);
-        assertEquals(response_data, expected_response);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response_status);
+        assertEquals(expected_response, actual_response);
     }
 }

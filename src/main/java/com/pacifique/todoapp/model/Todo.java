@@ -1,5 +1,6 @@
 package com.pacifique.todoapp.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,7 +40,10 @@ public class Todo {
 
     private String title;
     private String memo;
-    private Long user_id;
+
+    @Column(name = "user_id")
+    private Long userId;
+
     private LocalDateTime createdAt;
     private LocalDateTime dateCompleted;
     private Boolean important;

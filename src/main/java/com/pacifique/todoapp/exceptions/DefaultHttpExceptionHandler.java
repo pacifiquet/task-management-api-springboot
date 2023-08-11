@@ -47,9 +47,7 @@ public class DefaultHttpExceptionHandler {
                     .path(request.getServletPath())
                     .message(
                         Objects
-                            .requireNonNull(
-                                e.getBindingResult().getFieldError()
-                            )
+                            .requireNonNull(e.getBindingResult().getFieldError())
                             .getDefaultMessage()
                     )
                     .statusCode(HttpStatus.BAD_REQUEST.value())

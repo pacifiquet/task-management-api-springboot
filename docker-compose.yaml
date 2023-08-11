@@ -1,22 +1,40 @@
 version: "3.1"
 
 services:
+  sonarqube:
+    image: sonarqube
+    container_name: sonarqube
+    restart: unless-stopped
+    environment:
+      - SONARQUBE_JDBC_USERNAME=pacifique
+      - SONARQUBE_JDBC_PASSWORD=pacifique
+      - SONAR_LOG_LEVEL=DEBUG
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://postgres:5432/sonardb
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+
   postgres:
-    container_name: postgres
+    container_name: task-management-db
     image: postgres
     environment:
       POSTGRES_USER: pacifique
       POSTGRES_PASSWORD: pacifique
-      PGDATA: /data/postgres
     volumes:
-      - postgres:/data/postgres
+      - postgresql_data:/var/lib/postgresql/data
+      - sonarqube_db:/var/lib/postgresql
     ports:
       - "5432:5432"
     networks:
       - postgres
     restart: unless-stopped
   pgadmin:
-    container_name: pgadmin
+    container_name: task-management-pgadmin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@gmail.com}
@@ -30,7 +48,7 @@ services:
       - postgres
     restart: unless-stopped
   cache:
-    container_name: app-cache
+    container_name: task-management-cache
     image: bitnami/redis:latest
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
@@ -50,9 +68,11 @@ networks:
   postgres:
     driver: bridge
 volumes:
+  sonarqube_bundled-plugins:
+  sonarqube_conf:
   sonarqube_data:
+  sonarqube_db:
   sonarqube_extensions:
-  sonarqube_logs:
-  postgres:
+  postgresql_data:
   pgadmin:
   cache:

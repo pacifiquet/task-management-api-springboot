@@ -34,8 +34,7 @@ public class HomeControllerIntegrationTest {
 
     @BeforeAll
     static void setUp() {
-        client =
-            WebTestClient.bindToServer().baseUrl("http://localhost:").build();
+        client = WebTestClient.bindToServer().baseUrl("http://localhost:").build();
     }
 
     @BeforeEach
@@ -56,11 +55,11 @@ public class HomeControllerIntegrationTest {
             .exchange()
             .expectBody(String.class)
             .returnResult();
-        String response_data = response.getResponseBody();
-        HttpStatusCode status = response.getStatus();
+        String actual_response = response.getResponseBody();
+        HttpStatusCode response_status = response.getStatus();
 
         // assert
-        assertEquals(status, HttpStatus.OK);
-        assertEquals(response_data, expected_response);
+        assertEquals(HttpStatus.OK, response_status);
+        assertEquals(expected_response, actual_response);
     }
 }

@@ -12,7 +12,7 @@ spring:
       password: password123
       host: localhost
   datasource:
-    url: jdbc:postgresql://localhost:5432/todoapp
+    url: jdbc:postgresql://localhost:5432/task-management-db
     username: pacifique
     password: pacifique
     driver-class-name: org.postgresql.Driver
