@@ -13,10 +13,9 @@
     - pre-commit and spotless format
     - sonarqube
 
-# DATABASE DESIGN
+# Conceptual Database Design
 
-![image](https://drive.google.com/uc?export=view&id=1koT5_YY6FNQ02mIB66H7kXRCa72-WB4w)
-
+![image](https://drive.google.com/uc?export=view&id=1ed4wUji60AhldkqG9JM9zliUrA4BqE9o)
 ### `Swagger` for api documentation
 
 ![image](https://drive.google.com/uc?export=view&id=1yH5tZPPhkDNaBioE5ZWQaVIFc3QJxLCl)
