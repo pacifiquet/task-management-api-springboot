@@ -2,9 +2,9 @@ package com.pacifique.todoapp.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.pacifique.todoapp.config.db.TodoAppPostgresqlContainer;
+import com.pacifique.todoapp.config.db.DatabasePostgresqlTestContainer;
 import com.pacifique.todoapp.config.extension.MockTimeExtension;
-import com.pacifique.todoapp.config.utils.Time;
+import com.pacifique.todoapp.config.utils.time.Time;
 import com.pacifique.todoapp.model.User;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -23,7 +25,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @ActiveProfiles("test")
 @ExtendWith(MockTimeExtension.class)
 class UserRepositoryTest {
-    public static PostgreSQLContainer<?> postgres = TodoAppPostgresqlContainer.getInstance();
+    public static PostgreSQLContainer<?> postgres = DatabasePostgresqlTestContainer.getInstance();
 
     @BeforeAll
     static void beforeAll() {
@@ -33,6 +35,9 @@ class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
     private User userOne;
     private User userTwo;
 
@@ -41,7 +46,9 @@ class UserRepositoryTest {
         userOne =
             User
                 .builder()
-                .fullName("peter p")
+                .firstName("peter")
+                .lastName("jack")
+                .password(passwordEncoder.encode("password234"))
                 .email("peter@gmail.com")
                 .role("user")
                 .createdAt(Time.currentDateTime())
@@ -49,8 +56,10 @@ class UserRepositoryTest {
         userTwo =
             User
                 .builder()
-                .fullName("peter p")
-                .email("peter@gmail.com")
+                .firstName("jack")
+                .lastName("peter")
+                .password(passwordEncoder.encode("password234"))
+                .email("jack@gmail.com")
                 .role("user")
                 .createdAt(Time.currentDateTime())
                 .build();

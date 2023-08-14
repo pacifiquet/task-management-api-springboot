@@ -1,6 +1,6 @@
 package com.pacifique.todoapp.config.extension;
 
-import com.pacifique.todoapp.config.utils.Time;
+import com.pacifique.todoapp.config.utils.time.Time;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;

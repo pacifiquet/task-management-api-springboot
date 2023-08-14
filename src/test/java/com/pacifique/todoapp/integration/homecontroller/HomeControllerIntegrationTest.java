@@ -2,7 +2,7 @@ package com.pacifique.todoapp.integration.homecontroller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.pacifique.todoapp.config.db.TodoAppPostgresqlContainer;
+import com.pacifique.todoapp.config.db.DatabasePostgresqlTestContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +18,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class HomeControllerIntegrationTest {
-    public static PostgreSQLContainer<?> postgres = TodoAppPostgresqlContainer.getInstance();
+    public static PostgreSQLContainer<?> postgres = DatabasePostgresqlTestContainer.getInstance();
 
     @LocalServerPort
     private int port;

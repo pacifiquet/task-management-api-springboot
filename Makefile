@@ -19,6 +19,7 @@ build:
 	 @mvn clean install
 
 start-dev:
+	 @mvn spotless:apply
 	 @mvn clean test
 	 @mvn spring-boot:run
 

@@ -10,10 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pacifique.todoapp.config.extension.MockTimeExtension;
-import com.pacifique.todoapp.config.utils.Time;
+import com.pacifique.todoapp.config.utils.time.Time;
 import com.pacifique.todoapp.dto.UserRequest;
 import com.pacifique.todoapp.dto.UserResponse;
-import com.pacifique.todoapp.service.UserService;
+import com.pacifique.todoapp.service.UserServiceImpl;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,21 +25,29 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest
 @ActiveProfiles("test")
 @ExtendWith(MockTimeExtension.class)
 class UserControllerTest {
-    private final MockMvc mockMvc;
+    private MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+    private final WebApplicationContext context;
 
     @MockBean
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Autowired
-    public UserControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
+    public UserControllerTest(
+        MockMvc mockMvc,
+        ObjectMapper objectMapper,
+        WebApplicationContext context
+    ) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
+        this.context = context;
     }
 
     private UserRequest userRequest;
@@ -47,18 +55,23 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         userRequest =
             UserRequest
                 .builder()
                 .role("user")
                 .email("user@gmail.com")
-                .fullName("username")
+                .firstName("pacifique")
+                .lastName("paci")
+                .password("password1234")
                 .build();
         userResponse =
             UserResponse
                 .builder()
-                .id(1L)
-                .fullName("username")
+                .userId(1L)
+                .firstName("peter")
+                .lastName("jack")
+                .enabled(false)
                 .email("user@gmail.com")
                 .role("user")
                 .createAt(Time.currentDateTime())
@@ -70,7 +83,7 @@ class UserControllerTest {
     void testRegisterUser() throws Exception {
         // arrange
         var expected_response = "1";
-        when(userService.registerUser(any(UserRequest.class))).thenReturn(1L);
+        when(userService.registerUser(any(UserRequest.class), any())).thenReturn(1L);
 
         //act
         var actions = mockMvc.perform(
@@ -90,7 +103,7 @@ class UserControllerTest {
     void testUserList() throws Exception {
         // arrange
         var expected_response = objectMapper.writeValueAsString(List.of(userResponse));
-        when(userService.allUsers()).thenReturn(List.of(userResponse));
+        when(userService.listOfUser()).thenReturn(List.of(userResponse));
 
         // act
         var actions = mockMvc.perform(

@@ -2,20 +2,20 @@ package com.pacifique.todoapp.config.db;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 
-public class TodoAppPostgresqlContainer
-    extends PostgreSQLContainer<TodoAppPostgresqlContainer> {
+public class DatabasePostgresqlTestContainer
+    extends PostgreSQLContainer<DatabasePostgresqlTestContainer> {
     private static final String IMAGE_VERSION = "postgres:12.3-alpine";
 
     private static boolean initialized = false;
-    private static TodoAppPostgresqlContainer container;
+    private static DatabasePostgresqlTestContainer container;
 
-    private TodoAppPostgresqlContainer() {
+    private DatabasePostgresqlTestContainer() {
         super(IMAGE_VERSION);
     }
 
-    public static TodoAppPostgresqlContainer getInstance() {
+    public static DatabasePostgresqlTestContainer getInstance() {
         if (container == null) {
-            container = new TodoAppPostgresqlContainer();
+            container = new DatabasePostgresqlTestContainer();
         }
         return container;
     }

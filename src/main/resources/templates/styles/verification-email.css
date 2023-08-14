@@ -1,0 +1,36 @@
+html,
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+body {
+    width: 900px;
+    margin: 0 auto;
+    height: 50vh;
+}
+
+.email-action {
+}
+.email-header h1 {
+    padding: 30px;
+    margin: 10px;
+}
+.email-action{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.email-action {
+    padding-left: 30px;
+}
+.email-action p {
+    font-size: 20px;
+}
+.email-action a {
+    font-size: 20px;
+    margin-left: 10px;
+    color: darkgreen;
+    cursor: pointer;
+}

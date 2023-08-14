@@ -2,9 +2,9 @@ package com.pacifique.todoapp.integration.usercontroller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.pacifique.todoapp.config.db.TodoAppPostgresqlContainer;
+import com.pacifique.todoapp.config.db.DatabasePostgresqlTestContainer;
 import com.pacifique.todoapp.config.extension.MockTimeExtension;
-import com.pacifique.todoapp.config.utils.Time;
+import com.pacifique.todoapp.config.utils.time.Time;
 import com.pacifique.todoapp.dto.UserResponse;
 import com.pacifique.todoapp.exceptions.ApiError;
 import java.net.URI;
@@ -30,7 +30,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @ActiveProfiles("test")
 @ExtendWith(MockTimeExtension.class)
 public class UserControllerIntegrationTest {
-    public static PostgreSQLContainer<?> postgres = TodoAppPostgresqlContainer.getInstance();
+    public static PostgreSQLContainer<?> postgres = DatabasePostgresqlTestContainer.getInstance();
 
     @LocalServerPort
     private int port;
@@ -58,10 +58,12 @@ public class UserControllerIntegrationTest {
     @DisplayName("Testing Registering user")
     void testRegisterUser() throws Exception {
         // arrange
-        var expected_response = "1";
+        var expected_response = "5";
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("email", "user@gmail.com");
-        requestBody.put("full_name", "username");
+        requestBody.put("first_name", "peter");
+        requestBody.put("last_name", "jack");
+        requestBody.put("password", "jack1223");
         requestBody.put("role", "user");
 
         // act
@@ -94,7 +96,9 @@ public class UserControllerIntegrationTest {
             .localDateTime(Time.currentDateTime())
             .build();
         Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("full_name", "username");
+        requestBody.put("first_name", "peter");
+        requestBody.put("last_name", "jack");
+        requestBody.put("password", "jack1223");
         requestBody.put("role", "user");
 
         // act
@@ -121,9 +125,11 @@ public class UserControllerIntegrationTest {
         // arrange
         var userResponse = UserResponse
             .builder()
-            .id(1L)
+            .userId(5L)
             .email("user@gmail.com")
-            .fullName("username")
+            .firstName("peter")
+            .lastName("jack")
+            .enabled(false)
             .role("user")
             .createAt(Time.currentDateTime())
             .build();
@@ -148,16 +154,18 @@ public class UserControllerIntegrationTest {
     void testRetrieveUserDetails() throws Exception {
         // arrange
         Map<String, Object> urlVariable = new HashMap<>();
-        urlVariable.put("id", 1L);
+        urlVariable.put("id", 5L);
         var url = UriComponentsBuilder
             .fromUriString(this.baseUrl + "/{id}")
             .uriVariables(urlVariable)
             .toUriString();
         var expected_response = UserResponse
             .builder()
-            .id(1L)
+            .userId(5L)
             .email("user@gmail.com")
-            .fullName("username")
+            .firstName("peter")
+            .lastName("jack")
+            .enabled(false)
             .role("user")
             .createAt(Time.currentDateTime())
             .build();

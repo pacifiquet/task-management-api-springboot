@@ -1,6 +1,6 @@
 package com.pacifique.todoapp.exceptions;
 
-import com.pacifique.todoapp.config.utils.Time;
+import com.pacifique.todoapp.config.utils.time.Time;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -10,12 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.thymeleaf.exceptions.TemplateInputException;
 
 @ControllerAdvice
 public class DefaultHttpExceptionHandler {
 
     @ExceptionHandler(
-        { NoSuchElementException.class, DataIntegrityViolationException.class }
+        {
+            NoSuchElementException.class,
+            DataIntegrityViolationException.class,
+            IllegalArgumentException.class,
+            TemplateInputException.class,
+        }
     )
     public ResponseEntity<ApiError> defaultHandler(
         Exception e,

@@ -1,4 +1,4 @@
-package com.pacifique.todoapp.config.utils;
+package com.pacifique.todoapp.config.utils.time;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

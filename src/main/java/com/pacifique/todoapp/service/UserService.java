@@ -1,74 +1,19 @@
 package com.pacifique.todoapp.service;
 
-import com.pacifique.todoapp.config.utils.Time;
 import com.pacifique.todoapp.dto.UserRequest;
 import com.pacifique.todoapp.dto.UserResponse;
 import com.pacifique.todoapp.model.User;
-import com.pacifique.todoapp.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.NoSuchElementException;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
-@Service
-@AllArgsConstructor
-@Slf4j
-public class UserService {
-    private final UserRepository userRepository;
+public interface UserService {
+    Long registerUser(UserRequest request, HttpServletRequest http);
 
-    public Long registerUser(UserRequest request) {
-        log.info("user is registered successfully");
-        return userRepository
-            .save(
-                User
-                    .builder()
-                    .fullName(request.getFullName())
-                    .email(request.getEmail())
-                    .role(request.getRole())
-                    .createdAt(Time.currentDateTime())
-                    .build()
-            )
-            .getId();
-    }
+    void saveVerifyToken(User user, String token);
 
-    public List<UserResponse> allUsers() {
-        return userRepository
-            .findAll()
-            .stream()
-            .map(
-                user ->
-                    UserResponse
-                        .builder()
-                        .id(user.getId())
-                        .fullName(user.getFullName())
-                        .email(user.getEmail())
-                        .role(user.getRole())
-                        .createAt(user.getCreatedAt())
-                        .build()
-            )
-            .toList();
-    }
+    List<UserResponse> listOfUser();
 
-    public UserResponse getUser(Long id) {
-        return userRepository
-            .findById(id)
-            .map(
-                user ->
-                    UserResponse
-                        .builder()
-                        .id(user.getId())
-                        .fullName(user.getFullName())
-                        .email(user.getEmail())
-                        .role(user.getRole())
-                        .createAt(user.getCreatedAt())
-                        .build()
-            )
-            .orElseThrow(
-                () ->
-                    new NoSuchElementException(
-                        String.format("user with id: %s not found", id)
-                    )
-            );
-    }
+    UserResponse getUser(Long id);
+
+    String verifyUser(String token);
 }

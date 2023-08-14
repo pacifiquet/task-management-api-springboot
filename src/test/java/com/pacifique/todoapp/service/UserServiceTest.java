@@ -7,11 +7,12 @@ import static org.mockito.Mockito.when;
 
 import com.pacifique.todoapp.config.extension.CustomTestExecutionExtension;
 import com.pacifique.todoapp.config.extension.MockTimeExtension;
-import com.pacifique.todoapp.config.utils.Time;
+import com.pacifique.todoapp.config.utils.time.Time;
 import com.pacifique.todoapp.dto.UserRequest;
 import com.pacifique.todoapp.dto.UserResponse;
 import com.pacifique.todoapp.model.User;
 import com.pacifique.todoapp.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -22,6 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
@@ -34,10 +37,19 @@ import org.springframework.test.context.ActiveProfiles;
 )
 class UserServiceTest {
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
+
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private HttpServletRequest http;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     private User user_one;
     private User user_two;
@@ -47,18 +59,22 @@ class UserServiceTest {
         user_one =
             User
                 .builder()
-                .id(1L)
-                .fullName("peter p")
-                .email("peter@gmail.com")
+                .userId(1L)
+                .firstName("jack")
+                .lastName("peter")
+                .email("jack@gmail.com")
                 .role("user")
+                .password(passwordEncoder.encode("password123"))
                 .createdAt(Time.currentDateTime())
                 .build();
         user_two =
             User
                 .builder()
-                .id(2L)
-                .fullName("peter p")
+                .userId(2L)
+                .firstName("peter")
+                .lastName("jack")
                 .email("peter@gmail.com")
+                .password(passwordEncoder.encode("password1224"))
                 .role("user")
                 .createdAt(Time.currentDateTime())
                 .build();
@@ -70,10 +86,13 @@ class UserServiceTest {
         // arrange
         var expected_response = 1L;
         when(userRepository.save(any(User.class))).thenReturn(user_one);
+        when(passwordEncoder.encode(any())).thenReturn("hash_key");
+        applicationEventPublisher.publishEvent(any());
 
         //act
         Long actual_response = userService.registerUser(
-            new UserRequest("peter", "peter@gmail.com", "user")
+            new UserRequest("peter", "jack", "peter@gmail.com", "password123", "user"),
+            http
         );
 
         //Assert
@@ -91,17 +110,19 @@ class UserServiceTest {
                 user ->
                     UserResponse
                         .builder()
-                        .id(user.getId())
+                        .userId(user.getUserId())
                         .role(user.getRole())
                         .email(user.getEmail())
-                        .fullName(user.getFullName())
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName())
+                        .enabled(user.isEnabled())
                         .createAt(user.getCreatedAt())
                         .build()
             )
             .toList();
 
         //act
-        List<UserResponse> actual_users = userService.allUsers();
+        List<UserResponse> actual_users = userService.listOfUser();
 
         //Assert
         assertEquals(expected_users, actual_users);
@@ -115,10 +136,12 @@ class UserServiceTest {
             .thenReturn(Optional.ofNullable(user_one));
         var expected_user = UserResponse
             .builder()
-            .id(user_one.getId())
+            .userId(user_one.getUserId())
             .email(user_one.getEmail())
             .role(user_one.getRole())
-            .fullName(user_one.getFullName())
+            .firstName(user_one.getFirstName())
+            .lastName(user_one.getLastName())
+            .enabled(user_one.isEnabled())
             .createAt(user_one.getCreatedAt())
             .build();
 
