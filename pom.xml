@@ -177,6 +177,11 @@
                                     <tabWidth>4</tabWidth>
                                     <printWidth>90</printWidth>
                                     <braceStyle>collapse</braceStyle>
+                                    <!-- Optimize imports -->
+                                    <option>importOrder=java:javax:org:com:io</option>
+                                    <option>importOrder=blanklines</option>
+                                    <option>jsxBracketSameLine=false</option>
+                                    <option>useTabs=false</option>
                                     <useTabs>false</useTabs>
                                     <parser>java</parser>
                                 </config>

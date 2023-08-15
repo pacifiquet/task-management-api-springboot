@@ -9,11 +9,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class WeSecurityConfig {
-    private static final String[] WHITE_LIST_PATH = {
-        "/",
-        "/api/v1/users/**",
-        "/public/**",
-    };
+    private static final String[] WHITE_LIST_PATH = { "/", "/api/v1/users/**" };
 
     @Bean
     PasswordEncoder passwordEncoder() {

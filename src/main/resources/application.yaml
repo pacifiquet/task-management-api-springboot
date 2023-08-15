@@ -3,16 +3,6 @@ server:
 spring:
   profiles:
     active: dev
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ""
-    password: ""
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls.enable: true
 
 ---
 spring:
@@ -59,7 +49,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: false
   config:
     activate:

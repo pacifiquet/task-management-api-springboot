@@ -11,7 +11,6 @@ import com.pacifique.todoapp.repository.UserRepository;
 import com.pacifique.todoapp.repository.VerificationTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -52,6 +51,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void saveVerifyToken(User user, String token) {
+        VerificationToken verificationToken = VerificationToken
+            .builder()
+            .user(user)
+            .expirationTime(Utils.calculateTokenExpirationDate())
+            .token(token)
+            .build();
+        tokenRepository.save(verificationToken);
+    }
+
+    @Override
     @Transactional
     public String verifyUser(String token) {
         VerificationToken verificationToken = tokenRepository
@@ -71,17 +81,6 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
         userRepository.save(user);
         return "User verifies Successfully";
-    }
-
-    @Override
-    public void saveVerifyToken(User user, String token) {
-        VerificationToken verificationToken = VerificationToken
-            .builder()
-            .user(user)
-            .expirationTime(Utils.calculateTokenExpirationDate())
-            .token(token)
-            .build();
-        tokenRepository.save(verificationToken);
     }
 
     public List<UserResponse> listOfUser() {

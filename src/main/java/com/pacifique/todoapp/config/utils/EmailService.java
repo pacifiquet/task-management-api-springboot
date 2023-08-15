@@ -34,6 +34,11 @@ public class EmailService {
         context.setVariable("verificationLink", verificationLink);
 
         // process the Thymeleaf template with dynamic data
-        templateEngine.process("email/account-verify-template.html", context);
+        String htmlContent = templateEngine.process(
+            "email/account-verify-template.html",
+            context
+        );
+        // setText and send a message after
+        helper.setText(htmlContent, true);
     }
 }

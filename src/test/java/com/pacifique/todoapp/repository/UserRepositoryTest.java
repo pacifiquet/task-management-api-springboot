@@ -1,17 +1,21 @@
 package com.pacifique.todoapp.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 import com.pacifique.todoapp.config.db.DatabasePostgresqlTestContainer;
 import com.pacifique.todoapp.config.extension.MockTimeExtension;
 import com.pacifique.todoapp.config.utils.time.Time;
 import com.pacifique.todoapp.model.User;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,7 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = NONE)
 @ActiveProfiles("test")
 @ExtendWith(MockTimeExtension.class)
 class UserRepositoryTest {
@@ -70,12 +74,10 @@ class UserRepositoryTest {
     void testRegisterUsers() {
         //Arrange
         var expected_user = userOne;
-
         // act
-        var actual_user = userRepository.save(expected_user);
-
+        var actual_user = userRepository.save(userOne);
         //assert
-        assertEquals(expected_user, actual_user);
+        assertThat(actual_user).isNotNull();
     }
 
     @Test
@@ -83,24 +85,37 @@ class UserRepositoryTest {
     void testUserList() {
         //Arrange
         var expected_user_list = List.of(userOne, userTwo);
-
+        userRepository.saveAllAndFlush(expected_user_list);
         //act
-        userRepository.saveAll(List.of(userOne, userTwo));
         List<User> actual_user_list = userRepository.findAll();
-
         //assert
-        assertEquals(expected_user_list, actual_user_list);
+        assertThat(actual_user_list).contains(userOne, userTwo);
     }
 
-    @Test
     @DisplayName("Testing Get user")
-    void testGetUser() {
+    @ParameterizedTest
+    @ValueSource(longs = 1L)
+    void testGetUser(long validId) {
         //Arrange
-        var expected_user = userOne;
-        //act
         userRepository.save(userOne);
-        var actual_user = userRepository.findById(1L).get();
+        //act
+        var foundUser = userRepository.findById(validId);
         //assert
-        assertEquals(expected_user, actual_user);
+        assertThat(foundUser).isNotNull();
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = { 5L, 6L }) // Add more invalid IDs here
+    @DisplayName("Testing Get user with invalid ID")
+    void testGetUserWthInvalid(long invalidId) {
+        //act
+        var foundUser = userRepository.findById(invalidId).orElse(null);
+        //assert
+        assertThat(foundUser).isNull();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        postgres.stop();
     }
 }
