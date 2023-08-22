@@ -12,6 +12,7 @@
     - Docker
     - pre-commit and spotless format
     - sonarqube
+    - JWT Token 
 
 # Conceptual Database Design
 
