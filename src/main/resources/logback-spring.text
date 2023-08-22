@@ -55,11 +55,11 @@
             <maxFileSize>10MB</maxFileSize>
         </triggeringPolicy>
     </appender>
-    <logger name="com.pacifique.todoapp" level="DEBUG">
+    <logger name="com.pacifique.taskhero" level="DEBUG">
         <appender-ref ref="applicationLog" />
         <appender-ref ref="console" />
     </logger>
-    <logger name="com.pacifique.todoapp" level="INFO">
+    <logger name="com.pacifique.taskhero" level="INFO">
         <appender-ref ref="aopLog" />
         <appender-ref ref="console" />
     </logger>
