@@ -56,8 +56,7 @@ public class ProjectServiceImpl implements ProjectService {
             .findById(userId)
             .orElseThrow(
                 () ->
-                    new IllegalStateException(
-                        String.format("user with id: %s not found", userId)));
+                    new IllegalStateException(String.format("user with id: %s not found", userId)));
     List<Project> projects = projectRepository.findByUser(user);
     for (Project project : projects) {
       if (Objects.equals(project.getProjectId(), projectId)) {
@@ -69,7 +68,7 @@ public class ProjectServiceImpl implements ProjectService {
             .projectId(project.getProjectId())
             .build();
       }
-      throw new IllegalStateException(String.format("project with id: %s not found",projectId));
+      throw new IllegalStateException(String.format("project with id: %s not found", projectId));
     }
     return null;
   }
