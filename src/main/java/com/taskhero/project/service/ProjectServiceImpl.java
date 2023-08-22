@@ -68,6 +68,7 @@ public class ProjectServiceImpl implements ProjectService {
             .projectId(project.getProjectId())
             .build();
       }
+
       throw new IllegalStateException(String.format("project with id: %s not found", projectId));
     }
     return null;

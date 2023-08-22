@@ -72,8 +72,7 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
             .findById(projectId)
             .orElseThrow(
                 () ->
-                    new IllegalStateException(
-                        String.format("project with id :%s not found", projectId)));
+                    new IllegalStateException(String.format("project with id :%s not found", projectId)));
     List<ProjectTask> tasks = projectTaskRepository.findByProject(project);
     for (ProjectTask projectTask : tasks) {
       if (Objects.equals(projectTask.getTaskId(), taskId)) {
@@ -86,6 +85,7 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
             .status(projectTask.getStatus())
             .build();
       }
+
       throw new IllegalStateException(String.format("task with id: %s not found", taskId));
     }
     return null;
