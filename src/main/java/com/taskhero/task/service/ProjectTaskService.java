@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProjectTaskService {
   Long addTaskProject(CreateTaskRequest createTaskRequest, Long projectId);
 
-  String assignUserToTask(Long userId, Long task);
+  String assignUserToTask(Long userId, Long task, Long taskId);
 
   List<ProjectTaskResponse> taskList(Long projectId);
 

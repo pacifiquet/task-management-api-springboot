@@ -10,7 +10,6 @@ import com.taskhero.user.models.User;
 import com.taskhero.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +38,20 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 
   @Override
   @Transactional
-  public String assignUserToTask(Long userId, Long taskId) {
-    ProjectTask projectTask = projectTaskRepository.findById(taskId).orElseThrow();
+  public String assignUserToTask(Long projectId, Long userId, Long taskId) {
+    Project project =
+        projectRepository
+            .findById(projectId)
+            .orElseThrow(
+                () ->
+                    new IllegalStateException(
+                        String.format("project with id: %s not found", projectId)));
+    List<ProjectTask> taskList = projectTaskRepository.findByProject(project);
+    ProjectTask projectTask =
+        taskList.stream()
+            .filter(t -> t.getTaskId().equals(taskId))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("task not found"));
     User user = userRepository.findById(userId).orElseThrow();
     projectTask.setUser(user);
     projectTaskRepository.save(projectTask);
@@ -72,22 +83,22 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
             .findById(projectId)
             .orElseThrow(
                 () ->
-                    new IllegalStateException(String.format("project with id :%s not found", projectId)));
+                    new IllegalStateException(
+                        String.format("project with id :%s not found", projectId)));
     List<ProjectTask> tasks = projectTaskRepository.findByProject(project);
-    for (ProjectTask projectTask : tasks) {
-      if (Objects.equals(projectTask.getTaskId(), taskId)) {
-        return ProjectTaskResponse.builder()
-            .taskId(projectTask.getTaskId())
-            .description(projectTask.getDescription())
-            .dueDate(projectTask.getDueDate())
-            .name(projectTask.getName())
-            .priority(projectTask.getPriority())
-            .status(projectTask.getStatus())
-            .build();
-      }
-
-      throw new IllegalStateException(String.format("task with id: %s not found", taskId));
-    }
-    return null;
+    return projectTaskRepository.findByProject(project).stream()
+        .filter(t -> t.getTaskId().equals(taskId))
+        .map(
+            projectTask ->
+                ProjectTaskResponse.builder()
+                    .taskId(projectTask.getTaskId())
+                    .description(projectTask.getDescription())
+                    .dueDate(projectTask.getDueDate())
+                    .name(projectTask.getName())
+                    .priority(projectTask.getPriority())
+                    .status(projectTask.getStatus())
+                    .build())
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("task not found"));
   }
 }
