@@ -7,7 +7,6 @@ import com.taskhero.project.repository.ProjectRepository;
 import com.taskhero.user.models.User;
 import com.taskhero.user.repository.UserRepository;
 import java.util.List;
-import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -57,21 +56,20 @@ public class ProjectServiceImpl implements ProjectService {
             .orElseThrow(
                 () ->
                     new IllegalStateException(String.format("user with id: %s not found", userId)));
-    List<Project> projects = projectRepository.findByUser(user);
-    for (Project project : projects) {
-      if (Objects.equals(project.getProjectId(), projectId)) {
-        return ProjectResponse.builder()
-            .name(project.getName())
-            .endDate(project.getEndDate())
-            .description(project.getDescription())
-            .startDate(project.getStartDate())
-            .projectId(project.getProjectId())
-            .build();
-      }
 
-      throw new IllegalStateException(String.format("project with id: %s not found", projectId));
-    }
-    return null;
+    return projectRepository.findByUser(user).stream()
+        .filter(project -> project.getProjectId().equals(projectId))
+        .map(
+            project ->
+                ProjectResponse.builder()
+                    .name(project.getName())
+                    .endDate(project.getEndDate())
+                    .description(project.getDescription())
+                    .startDate(project.getStartDate())
+                    .projectId(project.getProjectId())
+                    .build())
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("project not found"));
   }
 
   @Override

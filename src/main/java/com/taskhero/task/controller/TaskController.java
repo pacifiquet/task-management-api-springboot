@@ -41,10 +41,10 @@ public class TaskController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
   @Operation(summary = "assign user to task")
   ResponseEntity<String> assignUserToTask(
-      @PathVariable("projectId") Long projectId,
       @PathVariable("userId") Long userId,
+      @PathVariable("projectId") Long projectId,
       @PathVariable Long taskId) {
-    return ResponseEntity.ok(projectTaskService.assignUserToTask(userId, taskId));
+    return ResponseEntity.ok(projectTaskService.assignUserToTask(projectId, userId, taskId));
   }
 
   @GetMapping
@@ -58,7 +58,7 @@ public class TaskController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_TEAM_MEMBER')")
   @Operation(summary = "get task by Id")
   ResponseEntity<ProjectTaskResponse> getTaskProjectById(
-      @PathVariable("taskId") Long tasKId, @PathVariable Long projectId) {
-    return ResponseEntity.ok(projectTaskService.getTaskProjectById(tasKId, projectId));
+      @PathVariable Long projectId, @PathVariable("taskId") Long tasKId) {
+    return ResponseEntity.ok(projectTaskService.getTaskProjectById(projectId, tasKId));
   }
 }
