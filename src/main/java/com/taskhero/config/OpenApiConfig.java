@@ -23,7 +23,9 @@ import io.swagger.v3.oas.annotations.servers.Server;
             version = "1.0",
             license = @License(name = "Licence name", url = "https://myapp.com"),
             termsOfService = "Terms of service"),
-    servers = {@Server(description = "Local", url = "http://localhost:8080/")},
+    servers = {
+      @Server(description = "Local", url = "http://157.245.198.239:8080/"),
+    },
     security = {@SecurityRequirement(name = "bearerAuth")})
 @SecurityScheme(
     name = "bearerAuth",

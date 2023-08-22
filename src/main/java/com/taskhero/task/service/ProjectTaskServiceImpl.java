@@ -85,7 +85,8 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
             .status(projectTask.getStatus())
             .build();
       }
-      throw new IllegalStateException(String.format("task with id: %s not found",taskId));
+
+      throw new IllegalStateException(String.format("task with id: %s not found", taskId));
     }
     return null;
   }
