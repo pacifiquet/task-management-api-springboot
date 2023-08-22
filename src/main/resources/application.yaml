@@ -3,9 +3,24 @@ server:
 spring:
   profiles:
     active: dev
-  output:
-    ansi:
-      enabled: always
+  main:
+    log-startup-info: true
+sendgrid:
+    api-key: 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
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+
+application:
+  security:
+    jwt:
+      secret-key: springbootbackendapplicationsecretkeyspringbootbackendapplicationsecretkey
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
 
 ---
 spring:
@@ -33,11 +48,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     hibernate:
-      ddl-auto: update
-    show-sql: false
+      ddl-auto: none
   config:
     activate:
       on-profile: dev
+
 
 ---
 spring:

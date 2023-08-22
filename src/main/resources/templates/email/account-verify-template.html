@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>new account</title>
+    <link th:href="@{../styles/verification-email.css}" href="../styles/verification-email.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+<div class="email-template">
+    <div class="email-header">
+        <h1>Hello, <span th:text="${recipientName}"></span></h1>
+    </div>
+    <div class="email-action">
+        <p>Click the following link to verify your account:</p>
+        <a th:href="@{${verificationLink}}">Verify Account</a>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+version: "3.1"
+
+services:
+  sonarqube:
+    image: sonarqube
+    container_name: task-management-sonarqube
+    restart: unless-stopped
+    environment:
+      - SONARQUBE_JDBC_USERNAME=pacifique
+      - SONARQUBE_JDBC_PASSWORD=pacifique
+      - SONAR_LOG_LEVEL=DEBUG
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://postgres:5432/sonardb
+    ports:
+      - "9000:9000"
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+
+volumes:
+  sonarqube_bundled-plugins:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_db:
+  sonarqube_extensions:
