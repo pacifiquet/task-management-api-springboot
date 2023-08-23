@@ -34,7 +34,7 @@ public class TaskController {
       @Validated @RequestBody CreateTaskRequest createTaskRequest,
       @PathVariable("projectId") Long projectId) {
     return ResponseEntity.status(CREATED)
-        .body(projectTaskService.addTaskProject(createTaskRequest, projectId));
+        .body(projectTaskService.addTaskProject(projectId, createTaskRequest));
   }
 
   @PatchMapping("assign/{taskId}/{userId}")

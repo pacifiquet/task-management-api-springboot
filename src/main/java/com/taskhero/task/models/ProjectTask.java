@@ -8,8 +8,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,8 +38,8 @@ public class ProjectTask {
   private Boolean priority;
   private String status;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  private User user;
+  @OneToMany(fetch = FetchType.EAGER)
+  private final List<User> users = new ArrayList<>();
 
   @ManyToOne(fetch = FetchType.EAGER)
   private Project project;

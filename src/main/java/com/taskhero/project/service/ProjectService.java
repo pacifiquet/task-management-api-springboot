@@ -5,11 +5,11 @@ import com.taskhero.project.dto.ProjectResponse;
 import java.util.List;
 
 public interface ProjectService {
-  Long createProject(CreateProjectRequest createProjectRequest, Long userId);
+  Long createProject(CreateProjectRequest createProjectRequest);
 
-  List<ProjectResponse> listProject(Long userId);
+  List<ProjectResponse> listProject();
 
-  ProjectResponse getProjectById(Long userId, Long projectId);
+  ProjectResponse getProjectById(Long projectId);
 
-  String inviteUser(Long userId, Long projectId, String email);
+  String addContributor(Long projectId, Long userId);
 }

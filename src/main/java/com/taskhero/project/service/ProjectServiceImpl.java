@@ -6,8 +6,12 @@ import com.taskhero.project.models.Project;
 import com.taskhero.project.repository.ProjectRepository;
 import com.taskhero.user.models.User;
 import com.taskhero.user.repository.UserRepository;
+import com.taskhero.user.service.authorservice.UserDetailsImpl;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,12 +21,14 @@ public class ProjectServiceImpl implements ProjectService {
   private final UserRepository userRepository;
 
   @Override
-  public Long createProject(CreateProjectRequest request, Long userId) {
-    User user = userRepository.findById(userId).orElseThrow();
+  public Long createProject(CreateProjectRequest request) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    UserDetailsImpl authUser = (UserDetailsImpl) authentication.getPrincipal();
+    User user = userRepository.findById(authUser.getId()).orElseThrow();
     return projectRepository
         .save(
             Project.builder()
-                .user(user)
+                .owner(user)
                 .description(request.description())
                 .endDate(request.endDate())
                 .startDate(request.startDate())
@@ -32,9 +38,11 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public List<ProjectResponse> listProject(Long userId) {
-    User user = userRepository.findById(userId).orElseThrow();
-    List<Project> projects = projectRepository.findByUser(user);
+  public List<ProjectResponse> listProject() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    UserDetailsImpl authUser = (UserDetailsImpl) authentication.getPrincipal();
+    User user = userRepository.findById(authUser.getId()).orElseThrow();
+    List<Project> projects = projectRepository.findByOwner(user);
     return projects.stream()
         .map(
             project ->
@@ -44,20 +52,18 @@ public class ProjectServiceImpl implements ProjectService {
                     .description(project.getDescription())
                     .endDate(project.getEndDate())
                     .name(project.getName())
+                    .owner(project.getOwner() == null ? null : project.getOwner().getUserId())
+                    .contributors(project.getContributors().stream().map(User::getUserId).toList())
                     .build())
         .toList();
   }
 
   @Override
-  public ProjectResponse getProjectById(Long userId, Long projectId) {
-    User user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(
-                () ->
-                    new IllegalStateException(String.format("user with id: %s not found", userId)));
-
-    return projectRepository.findByUser(user).stream()
+  public ProjectResponse getProjectById(Long projectId) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    UserDetailsImpl authUser = (UserDetailsImpl) authentication.getPrincipal();
+    User user = userRepository.findById(authUser.getId()).orElseThrow();
+    return projectRepository.findByOwner(user).stream()
         .filter(project -> project.getProjectId().equals(projectId))
         .map(
             project ->
@@ -67,13 +73,26 @@ public class ProjectServiceImpl implements ProjectService {
                     .description(project.getDescription())
                     .startDate(project.getStartDate())
                     .projectId(project.getProjectId())
+                    .owner(project.getOwner() == null ? null : project.getOwner().getUserId())
+                    .contributors(project.getContributors().stream().map(User::getUserId).toList())
                     .build())
         .findFirst()
         .orElseThrow(() -> new IllegalStateException("project not found"));
   }
 
   @Override
-  public String inviteUser(Long userId, Long projectId, String email) {
-    return "invitation sent";
+  public String addContributor(Long projectId, Long userId) {
+    Project project =
+        projectRepository
+            .findById(projectId)
+            .orElseThrow(() -> new IllegalStateException("project not found"));
+    Optional<User> user = userRepository.findById(userId);
+
+    if (user.isPresent()) {
+      project.getContributors().add(user.get());
+      projectRepository.save(project);
+      return "added contributor successfully";
+    }
+    return "failed to add a contributor";
   }
 }
