@@ -21,7 +21,7 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
   private final UserRepository userRepository;
 
   @Override
-  public Long addTaskProject(CreateTaskRequest request, Long projectId) {
+  public Long addTaskProject(Long projectId, CreateTaskRequest request) {
     Project project = projectRepository.findById(projectId).orElseThrow();
     return projectTaskRepository
         .save(
@@ -46,23 +46,36 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
                 () ->
                     new IllegalStateException(
                         String.format("project with id: %s not found", projectId)));
+    User user = userRepository.findById(userId).orElseThrow();
+
+    if (!project.getContributors().contains(user)) {
+      throw new IllegalStateException("user do not belong in this project");
+    }
+
     List<ProjectTask> taskList = projectTaskRepository.findByProject(project);
     ProjectTask projectTask =
         taskList.stream()
             .filter(t -> t.getTaskId().equals(taskId))
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("task not found"));
-    User user = userRepository.findById(userId).orElseThrow();
-    projectTask.setUser(user);
+
+    projectTask.getUsers().add(user);
     projectTaskRepository.save(projectTask);
     return "successfully assigned";
   }
 
   @Override
   public List<ProjectTaskResponse> taskList(Long projectId) {
-    Project project = projectRepository.findById(projectId).orElseThrow();
-    List<ProjectTask> byProject = projectTaskRepository.findByProject(project);
-    return byProject.stream()
+    Project project =
+        projectRepository
+            .findById(projectId)
+            .orElseThrow(
+                () ->
+                    new IllegalStateException(
+                        String.format("project id: %s not found", projectId)));
+
+    List<ProjectTask> tasks = projectTaskRepository.findByProject(project);
+    return tasks.stream()
         .map(
             t ->
                 ProjectTaskResponse.builder()
@@ -72,12 +85,14 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
                     .name(t.getName())
                     .priority(t.getPriority())
                     .status(t.getStatus())
+                    .projectId(t.getProject().getProjectId())
+                    .users(t.getUsers().stream().map(User::getUserId).toList())
                     .build())
         .toList();
   }
 
   @Override
-  public ProjectTaskResponse getTaskProjectById(Long taskId, Long projectId) {
+  public ProjectTaskResponse getTaskProjectById(Long projectId, Long taskId) {
     Project project =
         projectRepository
             .findById(projectId)
@@ -85,18 +100,21 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
                 () ->
                     new IllegalStateException(
                         String.format("project with id :%s not found", projectId)));
+
     List<ProjectTask> tasks = projectTaskRepository.findByProject(project);
-    return projectTaskRepository.findByProject(project).stream()
-        .filter(t -> t.getTaskId().equals(taskId))
+    return tasks.stream()
+        .filter(task -> task.getTaskId().equals(taskId))
         .map(
             projectTask ->
                 ProjectTaskResponse.builder()
-                    .taskId(projectTask.getTaskId())
-                    .description(projectTask.getDescription())
-                    .dueDate(projectTask.getDueDate())
                     .name(projectTask.getName())
+                    .dueDate(projectTask.getDueDate())
+                    .description(projectTask.getDescription())
                     .priority(projectTask.getPriority())
+                    .taskId(projectTask.getTaskId())
                     .status(projectTask.getStatus())
+                    .projectId(projectTask.getProject().getProjectId())
+                    .users(projectTask.getUsers().stream().map(User::getUserId).toList())
                     .build())
         .findFirst()
         .orElseThrow(() -> new IllegalStateException("task not found"));

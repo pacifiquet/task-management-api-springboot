@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-  List<Project> findByUser(User user);
+  List<Project> findByOwner(User user);
 }

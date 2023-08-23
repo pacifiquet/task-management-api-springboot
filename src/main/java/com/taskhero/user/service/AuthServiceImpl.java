@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
 
       return LoginResponse.builder().accessToken(jwtToken).refreshToken(refreshToken).build();
     } else {
-      throw new IllegalStateException("account is disabled");
+      throw new IllegalStateException("account is not verified");
     }
   }
 
