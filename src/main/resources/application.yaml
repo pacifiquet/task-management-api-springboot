@@ -6,6 +6,9 @@ spring:
   main:
     log-startup-info: true
 
+sendgrid:
+  api-key: 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
+  email : ppacifiuepaccy@gmail.com
 
 springdoc:
   swagger-ui:
@@ -16,6 +19,7 @@ springdoc:
 
 
 application:
+  font-end-url: http://localhost:4200/
   security:
     jwt:
       secret-key: springbootbackendapplicationsecretkeyspringbootbackendapplicationsecretkey

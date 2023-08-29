@@ -11,8 +11,6 @@ body {
     height: 50vh;
 }
 
-.email-action {
-}
 .email-header h1 {
     padding: 30px;
     margin: 10px;
@@ -21,8 +19,6 @@ body {
     display: flex;
     justify-content: start;
     align-items: center;
-}
-.email-action {
     padding-left: 30px;
 }
 .email-action p {

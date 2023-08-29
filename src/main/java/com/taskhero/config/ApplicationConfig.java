@@ -1,7 +1,6 @@
 package com.taskhero.config;
 
 import com.taskhero.user.service.authorservice.UserDetailsServiceImpl;
-import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,10 +47,5 @@ public class ApplicationConfig {
   @Bean
   public CsrfTokenRepository csrfTokenRepository() {
     return new CookieCsrfTokenRepository();
-  }
-
-  @Bean
-  public Dotenv dotenv() {
-    return Dotenv.load();
   }
 }

@@ -8,11 +8,11 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.taskhero.user.models.User;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -22,16 +22,21 @@ import org.thymeleaf.context.Context;
 @Slf4j
 public class EmailService implements EmailSendGrid {
   private final TemplateEngine templateEngine;
-  private final Dotenv dotenv;
+
+  @Value("${sendgrid.api-key}")
+  private String apiKey;
+
+  @Value("${sendgrid.email}")
+  private String email;
 
   @Override
   public void sendAccountVerifyEmail(
       String sendTo, String subject, String recipientName, String verificationLink)
       throws MessagingException, IOException {
 
-    Email from = new Email(dotenv.get("SG_EMAIL"));
+    Email from = new Email(apiKey);
     Email toEmail = new Email(sendTo);
-    SendGrid sendGrid = new SendGrid(dotenv.get("SG_KEY"));
+    SendGrid sendGrid = new SendGrid(email);
     Request request = new Request();
 
     // create a thymeleaf context and set the dynamic data
