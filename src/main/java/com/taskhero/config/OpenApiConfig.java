@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import io.swagger.v3.oas.annotations.servers.Server;
+import lombok.AllArgsConstructor;
 
 @OpenAPIDefinition(
     info =
@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
             license = @License(name = "Licence name", url = "https://myapp.com"),
             termsOfService = "Terms of service"),
     servers = {
-      @Server(description = "Local", url = "http://157.245.198.239:8080"),
+      //      @Server(description = "Local", url = "http://localhost:8080/"),
     },
     security = {@SecurityRequirement(name = "bearerAuth")})
 @SecurityScheme(
@@ -34,4 +34,5 @@ import io.swagger.v3.oas.annotations.servers.Server;
     type = SecuritySchemeType.HTTP,
     bearerFormat = "JWT",
     in = SecuritySchemeIn.HEADER)
+@AllArgsConstructor
 public class OpenApiConfig {}

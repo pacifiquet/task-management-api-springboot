@@ -1,6 +1,5 @@
 package com.taskhero.user.service;
 
-import com.taskhero.user.dto.LoggedInUser;
 import com.taskhero.user.dto.PasswordResetRequest;
 import com.taskhero.user.dto.UserRegisterRequest;
 import com.taskhero.user.dto.UserResponse;
@@ -29,7 +28,7 @@ public interface UserService {
 
   String changePasswordRequest(PasswordResetRequest passwordResetRequest);
 
-  LoggedInUser loggedInUserDetails();
+  UserResponse loggedInUserDetails();
 
   BiFunction<User, UserResponse, UserResponse> getUserResponse();
 

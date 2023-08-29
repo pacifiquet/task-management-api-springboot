@@ -12,4 +12,8 @@ public interface ProjectTaskService {
   List<ProjectTaskResponse> taskList(Long projectId);
 
   ProjectTaskResponse getTaskProjectById(Long projectId, Long tasKId);
+
+  void deleteTask(Long projectId, Long taskId);
+
+  Long updateTask(Long projectId, Long taskId, CreateTaskRequest request);
 }

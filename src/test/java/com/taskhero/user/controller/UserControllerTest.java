@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.taskhero.config.authentication.AuthenticationHandler;
 import com.taskhero.config.db.DatabasePostgresqlTestContainer;
 import com.taskhero.config.extension.MockTimeExtension;
 import com.taskhero.user.dto.LoginRequest;
@@ -41,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -53,12 +53,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
 class UserControllerTest {
   private static final PostgreSQLContainer<?> postgres =
       DatabasePostgresqlTestContainer.getInstance();
-  private static final AuthenticationHandler authenticationHandler =
-      AuthenticationHandler.getInstance();
 
   @BeforeAll
   static void afterAll() {
-    authenticationHandler.start();
     postgres.start();
   }
 
@@ -99,12 +96,41 @@ class UserControllerTest {
 
   @BeforeEach
   void setUp() {
-    mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+    mockMvc = MockMvcBuilders.webAppContextSetup(this.context).build();
   }
 
   @Test
   @DisplayName("Testing register user")
   void testRegisterUser() throws Exception {
+    // arrange
+    var expected_response = "Check your email to verify your account: user@gmail.com";
+    var userRequest =
+        UserRegisterRequest.builder()
+            .email("user@gmail.com")
+            .firstName("pacifique")
+            .lastName("paci")
+            .password("password1234")
+            .matchPassword("password1234")
+            .permissions(Set.of())
+            .roles(Set.of())
+            .build();
+    // act
+    var actions =
+        mockMvc.perform(
+            post("/api/v1/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userRequest)));
+    var actual_response = actions.andReturn().getResponse().getContentAsString();
+
+    // assert
+
+    actions.andExpect(status().isCreated());
+    assertThat(actual_response).isEqualTo(expected_response);
+  }
+
+  @Test
+  @DisplayName("Testing register user missing match password")
+  void testRegisterUserMissingMatchPassword() throws Exception {
     // arrange
     var userRequest =
         UserRegisterRequest.builder()
@@ -115,21 +141,74 @@ class UserControllerTest {
             .permissions(Set.of())
             .roles(Set.of())
             .build();
+    // act && assert
+    mockMvc
+        .perform(
+            post("/api/v1/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userRequest)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  @DisplayName("Testing register user wrong match password")
+  void testRegisterUserWithWrongMatchPassword() throws Exception {
+    // arrange
+    var expected_response =
+        "{\"path\":\"\",\"message\":\"password don't match\",\"statusCode\":400,\"localDateTime\":\"2023-08-08T03:56\"}";
+    var userRequest =
+        UserRegisterRequest.builder()
+            .email("user@gmail.com")
+            .firstName("pacifique")
+            .lastName("paci")
+            .password("password1234")
+            .matchPassword("wrong")
+            .permissions(Set.of())
+            .roles(Set.of())
+            .build();
     // act
     var actions =
         mockMvc.perform(
             post("/api/v1/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRequest)));
-    var response = actions.andReturn().getResponse().getContentAsString();
+    var actual_response = actions.andReturn().getResponse().getContentAsString();
 
     // assert
-    actions.andExpect(status().isCreated());
-    assertThat(response).isNotNull();
+    assertThat(actual_response).isEqualTo(expected_response);
+  }
+
+  @Test
+  @DisplayName("Testing register user with invalid email")
+  void testRegisterUserWithWrongEmail() throws Exception {
+    // arrange
+    var expected_response =
+        "{\"path\":\"\",\"message\":\"Invalid email\",\"statusCode\":400,\"localDateTime\":\"2023-08-08T03:56\"}";
+    var userRequest =
+        UserRegisterRequest.builder()
+            .email("user.gmail.com")
+            .firstName("pacifique")
+            .lastName("paci")
+            .password("password1234")
+            .matchPassword("password1234")
+            .permissions(Set.of())
+            .roles(Set.of())
+            .build();
+    // act
+    var actions =
+        mockMvc.perform(
+            post("/api/v1/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userRequest)));
+    var actual_response = actions.andReturn().getResponse().getContentAsString();
+
+    // assert
+    assertThat(actual_response).isEqualTo(expected_response);
   }
 
   @Test
   @DisplayName("Test get user list")
+  @WithMockUser(roles = "ADMIN")
   void testUserList() throws Exception {
     // arrange
     permission =
@@ -156,25 +235,25 @@ class UserControllerTest {
             .lastName(user.getLastName())
             .enabled(user.isEnabled())
             .createAt(user.getCreatedAt().toString())
+            .permissions(
+                user.getUserPermissions().stream().map(p -> p.getUserPermissions().name()).toList())
+            .roles(user.getRoles().stream().map(r -> r.getUserRole().name()).toList())
             .build();
     var expected_response = objectMapper.writeValueAsString(userResponse);
-    var loginResponse = authService.authenticate(new LoginRequest("peter@gmail.com", "password"));
 
     // act
-    var actions =
-        mockMvc.perform(
-            get("/api/v1/users")
-                .header("Authorization", "Bearer " + loginResponse.getAccessToken())
-                .contentType(MediaType.APPLICATION_JSON));
+    var actions = mockMvc.perform(get("/api/v1/users").contentType(MediaType.APPLICATION_JSON));
     var actual_response = actions.andReturn().getResponse().getContentAsString();
 
     // assert
     actions.andExpect(status().isOk());
-    assertThat(actual_response).isNotNull();
+    System.out.println(actual_response);
+    assertThat(actual_response).contains(expected_response);
   }
 
   @Test
   @DisplayName("Test get user details")
+  @WithMockUser(roles = "ADMIN")
   void testGetUserDetails() throws Exception {
     // arrange
     permission =
@@ -201,26 +280,27 @@ class UserControllerTest {
             .email(user.getEmail())
             .enabled(user.isEnabled())
             .createAt(user.getCreatedAt().toString())
+            .permissions(
+                user.getUserPermissions().stream().map(p -> p.getUserPermissions().name()).toList())
+            .roles(user.getRoles().stream().map(r -> r.getUserRole().name()).toList())
             .build();
     var expected_response = objectMapper.writeValueAsString(userResponse);
-    var loginResponse = authService.authenticate(new LoginRequest("userone@gmail.com", "password"));
 
     // act
     var actions =
         mockMvc.perform(
-            get("/api/v1/users/{id}", user.getUserId())
-                .header("Authorization", "Bearer " + loginResponse.getAccessToken())
-                .contentType(MediaType.APPLICATION_JSON));
+            get("/api/v1/users/{id}", user.getUserId()).contentType(MediaType.APPLICATION_JSON));
     var actual_response = actions.andReturn().getResponse().getContentAsString();
 
     // assert
     actions.andExpect(status().isOk());
-    assertThat(actual_response).isNotNull();
+    assertThat(actual_response).isEqualTo(expected_response);
   }
 
   @ParameterizedTest
   @DisplayName("Test get user details with Invalid Details")
   @ValueSource(longs = {10L})
+  @WithMockUser(roles = "ADMIN")
   void testGetUserDetailsWithInvalidId(long userId) throws Exception {
     // arrange
     userRepository.save(
