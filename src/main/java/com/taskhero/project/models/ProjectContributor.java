@@ -1,6 +1,5 @@
-package com.taskhero.task.models;
+package com.taskhero.project.models;
 
-import com.taskhero.project.models.Project;
 import com.taskhero.user.models.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,38 +9,29 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
-import java.time.LocalDate;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Builder
 @Entity
-public class ProjectTask {
+@Table(name = "projectContributors")
+public class ProjectContributor {
   @Id
+  @Column(updatable = false)
   @SequenceGenerator(
-      name = "task_id_sequence",
-      sequenceName = "task_id_sequence",
+      name = "project_contributor_id_sequence",
+      sequenceName = "project_contributor_id_sequence",
       allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_id_sequence")
-  private Long taskId;
-
-  private String name;
-  private String description;
-  private LocalDate dueDate;
-
-  @Column(columnDefinition = "BOOLEAN")
-  private Boolean priority;
-
-  private String status;
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_contributor_id_sequence")
+  private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "assigned_to_id")
-  private User assignedTo;
+  @JoinColumn(name = "user_id")
+  private User user;
 
   @ManyToOne
   @JoinColumn(name = "project_id")
@@ -49,6 +39,6 @@ public class ProjectTask {
 
   @Override
   public String toString() {
-    return "ProjectTask{" + "taskId=" + taskId + '}';
+    return "ProjectContributor{" + "id=" + id + '}';
   }
 }

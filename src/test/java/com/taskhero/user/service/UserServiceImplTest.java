@@ -1,6 +1,5 @@
 package com.taskhero.user.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -131,6 +130,7 @@ class UserServiceImplTest {
                 "jack",
                 "peter@gmail.com",
                 "password123",
+                "password123",
                 Set.of("ROLE_ADMIN"),
                 Set.of(UserPermission.PROJECT_WRITE.getPermission())),
             httpServletRequest);
@@ -154,6 +154,11 @@ class UserServiceImplTest {
                         .lastName(user.getLastName())
                         .enabled(user.isEnabled())
                         .createAt(user.getCreatedAt().toString())
+                        .roles(user.getRoles().stream().map(r -> r.getUserRole().name()).toList())
+                        .permissions(
+                            user.getUserPermissions().stream()
+                                .map(p -> p.getUserPermissions().name())
+                                .toList())
                         .build())
             .toList();
 
@@ -161,14 +166,13 @@ class UserServiceImplTest {
     List<UserResponse> actual_users = userService.listOfUser();
 
     // Assert
-    assertThat(actual_users).isNotNull();
-    //    assertEquals(expected_users, actual_users);
+    assertEquals(expected_users, actual_users);
   }
 
   @ParameterizedTest
   @DisplayName("Testing retrieve user by Id")
   @ValueSource(longs = {1L, 2L, 3L})
-  void testGetUser(long userId) throws IllegalAccessException {
+  void testGetUser(long userId) {
     // arrange
     when(userRepository.findById(anyLong())).thenReturn(Optional.ofNullable(verified_user));
     var expected_user =
@@ -179,13 +183,18 @@ class UserServiceImplTest {
             .lastName(verified_user.getLastName())
             .enabled(verified_user.isEnabled())
             .createAt(verified_user.getCreatedAt().toString())
+            .permissions(
+                verified_user.getUserPermissions().stream()
+                    .map(p -> p.getUserPermissions().name())
+                    .toList())
+            .roles(verified_user.getRoles().stream().map(r -> r.getUserRole().name()).toList())
             .build();
 
     // Act
     var actual_user = userService.getUser(userId);
+
     // assert
-    assertThat(actual_user).isNotNull();
-    //    assertEquals(expected_user, actual_user);
+    assertEquals(expected_user, actual_user);
   }
 
   @ParameterizedTest
@@ -229,6 +238,7 @@ class UserServiceImplTest {
     when(verificationTokenRepository.findByToken(any(String.class)))
         .thenReturn(Optional.ofNullable(expected_object));
 
+    assert expected_object != null;
     String actual_response = userService.verifyUser(expected_object.getToken());
 
     assertEquals(expected_response, actual_response);
@@ -248,6 +258,7 @@ class UserServiceImplTest {
     when(verificationTokenRepository.findByToken(any(String.class)))
         .thenReturn(Optional.ofNullable(expected_object));
     // act
+    assert expected_object != null;
     String actual_response = userService.verifyUser(expected_object.getToken());
     // assert
     assertEquals(expected_response, actual_response);
@@ -282,6 +293,7 @@ class UserServiceImplTest {
         .thenReturn(Optional.ofNullable(verificationToken));
 
     // act
+    assert verificationToken != null;
     String actual_response = userService.verifyUser(verificationToken.getToken());
     assertEquals(expected_response, actual_response);
   }

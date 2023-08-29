@@ -1,14 +1,11 @@
 package com.taskhero.user.service;
 
 import com.taskhero.email.EmailSendGrid;
-import com.taskhero.user.dto.LoggedInUser;
 import com.taskhero.user.dto.PasswordResetRequest;
 import com.taskhero.user.dto.UserRegisterRequest;
 import com.taskhero.user.dto.UserResponse;
 import com.taskhero.user.events.RegistrationCompleteEvent;
 import com.taskhero.user.models.PasswordResetToken;
-import com.taskhero.user.models.Permission;
-import com.taskhero.user.models.Role;
 import com.taskhero.user.models.User;
 import com.taskhero.user.models.VerificationToken;
 import com.taskhero.user.repository.PasswordResetRepository;
@@ -17,15 +14,15 @@ import com.taskhero.user.repository.VerificationTokenRepository;
 import com.taskhero.user.service.authorservice.UserDetailsImpl;
 import com.taskhero.utils.Time;
 import com.taskhero.utils.Utils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.util.Calendar;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -45,6 +42,8 @@ public class UserServiceImpl implements UserService {
   private final EmailSendGrid emailService;
   private final PasswordResetRepository passwordResetRepository;
   private final IUserRoleAndPermissionHandler userRoleAndPermissionHandler;
+
+  @PersistenceContext private EntityManager entityManager;
 
   @Override
   @Transactional
@@ -199,16 +198,22 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public LoggedInUser loggedInUserDetails() {
+  public UserResponse loggedInUserDetails() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-    return LoggedInUser.builder()
-        .authorities(principal.getAuthorities())
-        .userId(principal.getId())
-        .email(principal.getEmail())
-        .firstName(principal.getFirstName())
-        .createAt(principal.getCreatedAt().toString())
-        .lastName(principal.getLastName())
+    User user = userRepository.findById(principal.getId()).orElseThrow();
+    return UserResponse.builder()
+        .roles(user.getRoles().stream().map(role -> role.getUserRole().name()).toList())
+        .permissions(
+            user.getUserPermissions().stream()
+                .map(permission -> permission.getUserPermissions().name())
+                .toList())
+        .userId(user.getUserId())
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .email(user.getEmail())
+        .enabled(user.isEnabled())
+        .createAt(user.getCreatedAt().toString())
         .build();
   }
 
@@ -222,16 +227,11 @@ public class UserServiceImpl implements UserService {
             .email(user.getEmail())
             .enabled(user.isEnabled())
             .createAt(user.getCreatedAt().toString())
-            .permissions(listPermission().apply(user.getUserPermissions()))
-            .roles(listRole().apply(user.getRoles()))
+            .permissions(
+                user.getUserPermissions().stream()
+                    .map(permission -> permission.getUserPermissions().name())
+                    .toList())
+            .roles(user.getRoles().stream().map(role -> role.getUserRole().name()).toList())
             .build());
-  }
-
-  private static Function<Set<Role>, List<String>> listRole() {
-    return (role -> role.stream().map(r -> r.getUserRole().name()).toList());
-  }
-
-  private static Function<Set<Permission>, List<String>> listPermission() {
-    return (role -> role.stream().map(r -> r.getUserPermissions().name()).toList());
   }
 }

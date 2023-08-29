@@ -5,13 +5,14 @@ spring:
     active: dev
   main:
     log-startup-info: true
-sendgrid:
-    api-key: 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
+
 
 springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: alpha
+    csrf:
+      enabled: true
 
 
 application:
@@ -52,7 +53,11 @@ spring:
   config:
     activate:
       on-profile: dev
-
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
 
 ---
 spring:

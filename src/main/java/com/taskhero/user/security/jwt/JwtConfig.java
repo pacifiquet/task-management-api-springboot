@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 @RequiredArgsConstructor
 @Data
 public class JwtConfig {
+
   @Value("${application.security.jwt.secret-key}")
   private String secretKey;
 

@@ -4,7 +4,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
-import com.taskhero.user.dto.LoggedInUser;
 import com.taskhero.user.dto.PasswordResetRequest;
 import com.taskhero.user.dto.UserRegisterRequest;
 import com.taskhero.user.dto.UserResponse;
@@ -74,7 +73,7 @@ public class UserController {
   @DeleteMapping("/{id}")
   @Operation(summary = "delete user")
   @ResponseStatus(NO_CONTENT)
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PreAuthorize("hasRole('ADMIN')")
   public void deleteUser(@PathVariable("id") Long id) {
     userService.deleteUser(id);
   }
@@ -106,10 +105,10 @@ public class UserController {
                   mediaType = "application/json",
                   schema = @Schema(implementation = UserResponse.class)),
             }),
-        @ApiResponse(responseCode = "500", description = "server error", content = @Content),
+        @ApiResponse(responseCode = "403", description = "bad credentials", content = @Content),
       })
   @ResponseStatus(OK)
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PreAuthorize("hasRole('ADMIN')")
   public List<UserResponse> getAllUsers() {
     return userService.listOfUser();
   }
@@ -117,16 +116,16 @@ public class UserController {
   @GetMapping("/{id}")
   @Operation(summary = "get user by id")
   @ResponseStatus(OK)
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   public UserResponse getUser(@PathVariable Long id) {
     return userService.getUser(id);
   }
 
-  @GetMapping("/logged-user-details")
+  @GetMapping("/logged-user-detail")
   @ResponseStatus(OK)
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_TEAM_MEMBER')")
-  @Operation(summary = "logged in user details")
-  public LoggedInUser getLoginUser() {
+  @PreAuthorize("hasAnyRole('ADMIN','USER','MANAGER','ROLE_TEAM_MEMBER')")
+  @Operation(summary = "logged in user detail")
+  public UserResponse getLoginUser() {
     return userService.loggedInUserDetails();
   }
 }

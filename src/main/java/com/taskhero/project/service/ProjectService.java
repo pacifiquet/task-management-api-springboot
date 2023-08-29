@@ -12,4 +12,8 @@ public interface ProjectService {
   ProjectResponse getProjectById(Long projectId);
 
   String addContributor(Long projectId, Long userId);
+
+  void deleteProject(Long projectId);
+
+  Long updateProject(Long projectId, CreateProjectRequest request);
 }

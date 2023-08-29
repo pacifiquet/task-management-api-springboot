@@ -1,6 +1,5 @@
 package com.taskhero.project.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 
@@ -8,8 +7,8 @@ import lombok.Builder;
 public record ProjectResponse(
     Long projectId,
     String name,
-    LocalDateTime startDate,
-    LocalDateTime endDate,
+    String startDate,
+    String endDate,
     String description,
     Long owner,
     List<Long> contributors) {}

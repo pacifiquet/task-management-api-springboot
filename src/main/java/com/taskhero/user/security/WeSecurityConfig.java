@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +34,7 @@ public class WeSecurityConfig {
     "/swagger-ui.html",
     "/"
   };
+
   private final AuthenticationProvider authenticationProvider;
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final LogoutHandler logoutHandler;
@@ -50,7 +53,10 @@ public class WeSecurityConfig {
     http.cors()
         .and()
         .csrf()
-        .disable()
+        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+        .ignoringRequestMatchers("/api/v1/**")
+        .and()
         .authorizeHttpRequests()
         .requestMatchers(WHITE_LIST_PATH)
         .permitAll()

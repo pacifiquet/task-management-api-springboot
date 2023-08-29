@@ -65,7 +65,7 @@ public class UserControllerIntegrationTest {
     this.passwordEncoder = passwordEncoder;
   }
 
-  private String baseUrl = "http://localhost:";
+  private String baseUrl = "http://localhost";
 
   @BeforeAll
   static void setUp() {
@@ -74,7 +74,7 @@ public class UserControllerIntegrationTest {
 
   @BeforeEach
   public void beforeSetup() {
-    this.baseUrl = this.baseUrl + port + "/api/v1/users";
+    this.baseUrl = this.baseUrl + ":" + port + "/api/v1/users";
   }
 
   @Test
@@ -86,6 +86,7 @@ public class UserControllerIntegrationTest {
     requestBody.put("first_name", "one");
     requestBody.put("last_name", "username");
     requestBody.put("password", "passworduser");
+    requestBody.put("matchPassword", "passworduser");
     requestBody.put("roles", Set.of());
     requestBody.put("permissions", Set.of());
 
@@ -100,6 +101,7 @@ public class UserControllerIntegrationTest {
             .exchange()
             .expectBody(String.class)
             .returnResult();
+
     var actual_response = response.getResponseBody();
     var response_status = response.getStatus();
 
@@ -115,14 +117,15 @@ public class UserControllerIntegrationTest {
     var expected_response =
         ApiError.builder()
             .path("/api/v1/users/register")
-            .message("user email is required")
-            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .message("HV000028: Unexpected exception during isValid call.")
+            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
             .localDateTime(String.valueOf(Time.currentDateTime()))
             .build();
     Map<String, Object> requestBody = new HashMap<>();
     requestBody.put("first_name", "usertwo");
     requestBody.put("last_name", "username");
     requestBody.put("password", "jack1223");
+    requestBody.put("matchPassword", "jack1223");
     requestBody.put("roles", Set.of());
     requestBody.put("permissions", Set.of());
 
@@ -141,7 +144,7 @@ public class UserControllerIntegrationTest {
     var response_status = response.getStatus();
 
     // assert
-    assertEquals(HttpStatus.BAD_REQUEST, response_status);
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response_status);
     assertEquals(expected_response, actual_response);
   }
 

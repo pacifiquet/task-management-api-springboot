@@ -1,7 +1,12 @@
 package com.taskhero.user.models;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.EAGER;
+import static jakarta.persistence.FetchType.LAZY;
 
+import com.taskhero.project.models.Project;
+import com.taskhero.project.models.ProjectContributor;
+import com.taskhero.task.models.ProjectTask;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.io.Serial;
@@ -20,10 +26,12 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
@@ -64,4 +72,18 @@ public class User implements Serializable {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "permission_id"))
   private Set<Permission> userPermissions = new HashSet<>();
+
+  @OneToMany(mappedBy = "owner", fetch = LAZY, orphanRemoval = true, cascade = ALL)
+  private final Set<Project> projects = new HashSet<>();
+
+  @OneToMany(mappedBy = "user", fetch = LAZY, cascade = ALL, orphanRemoval = true)
+  private final Set<ProjectContributor> contributors = new HashSet<>();
+
+  @OneToMany(mappedBy = "assignedTo", fetch = LAZY, orphanRemoval = true, cascade = ALL)
+  private final Set<ProjectTask> tasks = new HashSet<>();
+
+  @Override
+  public String toString() {
+    return "User{" + "userId=" + userId + '}';
+  }
 }

@@ -34,14 +34,7 @@ public class ArchitectureRulesDateTimeTest {
   //              "Use Time.currentTime methods instead of as it gives opportunity of mocking time
   // in tests");
   //
-  //  @ArchTest
-  //  public static final ArchRule RESTRICT_USAGE_OF_OFFSET_DATE_TIME_NOW =
-  //      noClasses()
-  //          .should()
-  //          .callMethod(OffsetDateTime.class, "now")
-  //          .because(
-  //              "Use Time.currentOffsetDateTime methods instead of as it gives opportunity of
-  // mocking time in tests");
+
   //
   //  @ArchTest
   //  public static final ArchRule RESTRICT_USAGE_OF_ZONED_DATE_TIME_NOW =
