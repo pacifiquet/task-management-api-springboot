@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 public class Main {
 
   public static void main(String[] args) {
-    // Load the .env file
+    // Load the .env
     Dotenv dotenv = Dotenv.configure().load();
     // Set the environment variables from the .env file
     dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
